@@ -24,6 +24,7 @@
 
             <h2>color</h2>
             <label><div class="fgbg">fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
+            <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
             <label><div class="fgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
             <div id="colorPickerHolder"></div>
             <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
@@ -43,16 +44,17 @@
             <h2>height</h2>
             <input id="height" onchange="setNewHeight()"> / <span id="maxheight"></span>
             <h2>output</h2>
-            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48mono)" checked ><span>48px player mono</span></label>
+            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48color)" checked><span>48px player color</span></label>
+            <div class="output">
+                <button onclick='download("splash.bas",get48pxBasic());'>download splash.bas</button>
+                <button onclick='download("splash.asm",get48pxColorASM());'>download splash.asm</button>
+            </div>            
+            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48mono)"  ><span>48px player mono</span></label>
             <div class="output">
                 <button onclick='download("splash.bas",get48pxBasic());'>download splash.bas</button>
                 <button onclick='download("splash.asm",get48pxMonoASM());'>download splash.asm</button>
             </div>
-            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48color)"><span>48px player color</span></label>
-            <div class="output">
-                <button onclick='download("splash.bas",get48pxBasic());'>download splash.bas</button>
-                <button onclick='download("splash.asm",get48pxColorASM());'>download splash.asm</button>
-            </div>
+
             
 
         </div>

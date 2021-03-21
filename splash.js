@@ -112,7 +112,7 @@ let sx,sy,ex,ey;
 
 
 function setup() {
-  setCurrentMode(modes.player48mono);
+  setCurrentMode(modes.player48color);
   for (let y = 0; y < H; y++) {
     yxGrid[y] = Array();
   }
@@ -132,7 +132,10 @@ function setCurrentMode(mode){
   
   const colorToolElem = document.getElementById('colortool');
   colorToolElem.style.display = mode.MULTICOLOR ? 'block':'none';
+  const colorPickShowElem = document.getElementById('hovercolorlabel');
+  colorPickShowElem.style.display = mode.MULTICOLOR ? 'block':'none';
   
+
   currentMode = mode;
   fillBlankColorGridWithDefault();
   loop();
@@ -159,8 +162,8 @@ function getColorForRow(y,half){
 
 
 function draw() {
-background(`#${HUELUM2HEX[currentTVMode][currentBGColor]}`);
-noStroke();
+  background(`#${HUELUM2HEX[currentTVMode][currentBGColor]}`);
+  noStroke();
 
 
 for (let x = 0; x < W; x++) {
@@ -202,6 +205,12 @@ noLoop();
 
 }
 
+function showHoverColor(){
+  const gridY = int(mouseY / PIXH);
+  const color = colorGrid[gridY];
+  document.getElementById("hovercolor").innerHTML = color?color:'';
+}
+
 function mouseOutOfBounds(){
   return (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height);
 }
@@ -220,22 +229,25 @@ if(currentInkMode == 'toggle') {
   currentInkBoolean = (currentInkMode == 'draw');
 }
 currentToolFunctions.mousePressed(gridX,gridY);
-loop();
+  loop();
 }
 
 function mouseDragged() {
   if(mouseOutOfBounds()) return;
-const sx = pmouseX;
-const sy = pmouseY;
-const ex = mouseX;
-const ey = mouseY;
+  const sx = pmouseX;
+  const sy = pmouseY;
+  const ex = mouseX;
+  const ey = mouseY;
 
-currentToolFunctions.mouseDragged(sx,sy,ex,ey);
-loop();
+  currentToolFunctions.mouseDragged(sx,sy,ex,ey);
+  showHoverColor();
+  loop();
 }
 
 function mouseMoved(){
-loop();
+  if(mouseOutOfBounds()) return;
+  showHoverColor();
+  loop();
 }
 
 function mouseReleased(){  
@@ -291,13 +303,13 @@ function getAllSpotsBetween(sx,sy,ex,ey){
 
 
 function setTool(what){
-currentTool = what;   
-currentToolFunctions = toolFunctions[what];
+  currentTool = what;   
+  currentToolFunctions = toolFunctions[what];
 }
 
 function setInkmode(what){
-currentInkMode = what;
-currentInkBoolean = (what == 'erase') ? false : true;
+  currentInkMode = what;
+  currentInkBoolean = (what == 'erase') ? false : true;
 }
 
 
@@ -406,7 +418,12 @@ function closeAtariColorPicker(){
 }
 function clickAtariColor(atariKey){
   document.getElementById('colorTable').style.visibility = "hidden";
-  if(currentColorPickerTarget == 'fg') setFGColor(atariKey);
+  if(currentColorPickerTarget == 'fg') {
+    setFGColor(atariKey);
+    if(currentMode.MULTICOLOR) {
+      document.getElementById("colortool").click();
+    }
+  }
   if(currentColorPickerTarget == 'bg') setBGColor(atariKey);
   
 }

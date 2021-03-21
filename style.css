@@ -99,3 +99,9 @@ input.error {
     width: 1.6em;
     text-align: center;
 }
+
+label.mini {
+    font-size: 12px;
+    text-align: left;
+    padding-left: 40px;
+}
