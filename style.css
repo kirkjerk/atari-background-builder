@@ -1,0 +1,101 @@
+body {
+    background-color: #333;
+    color: #bbb;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 20px;
+}
+a {
+    color: #bbb;
+}
+#canvasParent {
+    background-color: #3d3d3d;
+    padding: 20px;
+    display: inline-block;
+}
+:checked + span {
+    color: white;
+}
+
+#mainwrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 60px;
+}
+#mainwrapper label {
+    display: block;
+}
+
+#mainwrapper .left {
+    margin-right: 8px;
+}
+#mainwrapper .center {
+    position: relative;
+    top: -60px;
+}
+h1 {
+    font-size: 30px;
+    text-align: center;
+}
+#mainwrapper .right {
+    margin-left: 16px;
+}
+#mainwrapper > div {
+    text-align: left;
+}
+#mainwrapper h2 {
+    line-height: 1rem;
+    font-size: 24px;
+    margin-right: 8px;
+}
+#height {
+    width: 2em;
+}
+input.error {
+    background-color: red;
+}
+
+.info {
+    width: 500px;
+    text-align: left;
+    margin: auto;
+}
+.output button {
+    display: block;
+}
+
+.colorpick {
+    position: absolute;
+    z-index: 100;
+    background-color: black;
+    cursor: pointer;
+}
+.colorpick tr:first-child td {
+    text-align: right;
+}
+.colorpick td {
+    text-align: center;
+}
+.colorpick td.light {
+    color: white;
+}
+.colorpick td.dark {
+    color: black;
+}
+.colorHolder.light {
+    color: white;
+}
+.colorHolder.dark {
+    color: black;
+}
+
+.fgbg {
+    width: 1.6em;
+    display: inline-block;
+    text-align: right;
+}
+.colorHolder {
+    display: inline-block;
+    width: 1.6em;
+    text-align: center;
+}

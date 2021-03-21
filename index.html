@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>splash-o-matic 2600</title>
+<script src="p5.min.js"></script>
+<script src="splash.js"></script>
+<script src="splash-templates.js"></script>
+<script src="ataricolors.js"></script>
+<meta name="viewport" content="width=500">
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    
+
+    <div id="mainwrapper">
+        <div class="left">
+            <h2>tool</h2>
+            <label><input type="radio" checked  name="tool" onclick="setTool('draw')" ><span>pen</span></label>
+            <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
+            <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
+            <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
+
+            <h2>color</h2>
+            <label><div class="fgbg">fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
+            <label><div class="fgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
+            <div id="colorPickerHolder"></div>
+            <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
+            <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
+            
+            <h2>inkmode</h2>
+            <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
+            <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
+            <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label>
+           
+
+        </div>
+        <div class="center">
+            <h1>splash-o-matic 2600</h1>
+            <div id="canvasParent"></div></div>
+        <div class="right">
+            <h2>height</h2>
+            <input id="height" onchange="setNewHeight()"> / <span id="maxheight"></span>
+            <h2>output</h2>
+            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48mono)" checked ><span>48px player mono</span></label>
+            <div class="output">
+                <button onclick='download("splash.bas",get48pxBasic());'>download splash.bas</button>
+                <button onclick='download("splash.asm",get48pxMonoASM());'>download splash.asm</button>
+            </div>
+            <label><input type="radio" name="output" onclick="setCurrentMode(modes.player48color)"><span>48px player color</span></label>
+            <div class="output">
+                <button onclick='download("splash.bas",get48pxBasic());'>download splash.bas</button>
+                <button onclick='download("splash.asm",get48pxColorASM());'>download splash.asm</button>
+            </div>
+            
+
+        </div>
+    </div>    
+    
+    <div class="info">
+        <h2>what is this?</h2>
+        <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
+        <p>(Some knowledge of 
+            <a href="https://www.randomterrain.com/atari-2600-memories-batari-basic-commands.html">batari Basic</a> 
+            may be helpful)</p>
+        <p>Note that the generated code samples are not going to well-tuned for ROM usage etc, epecially
+            in terms of colors.
+        </p>
+        <h2>todo</h2>
+            (no promises)
+            <ul>
+                <li>copy/paste
+                <li>undo
+                <li>modes: ASM PF, bB PF, bB DPC+ PF
+                <li>text tool w/ fonts
+                <li>import from source code
+                <li>import from graphic file
+                
+            </ul>
+            <h2>thanks</h2>
+            <ul>
+                <li>Karl Garrison for 48px kernels
+            </ul>
+            <h2>source</h2>
+            <a href="https://github.com/kirkjerk/splash-o-matic">Fork me at github</a>
+
+
+
+    </dv>
+
+
+  
+</html>
+
