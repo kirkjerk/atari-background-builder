@@ -35,7 +35,6 @@ a {
 }
 h1 {
     font-size: 30px;
-    text-align: center;
 }
 #mainwrapper .right {
     margin-left: 16px;
@@ -55,8 +54,7 @@ input.error {
     background-color: red;
 }
 
-.info {
-    width: 500px;
+#info {
     text-align: left;
     margin: auto;
 }
@@ -104,4 +102,11 @@ label.mini {
     font-size: 12px;
     text-align: left;
     padding-left: 40px;
+}
+button {
+    margin-top: 4px;
+}
+select {
+    font-size: 20px;
+    display: block;
 }

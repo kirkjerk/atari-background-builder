@@ -6,7 +6,9 @@ const modes = {
     ATARI_STARTHEIGHT:48,
     SCREEN_WIDTH_PER: 8,
     SCREEN_HEIGHT_PER: 5,
-    MULTICOLOR: false
+    MULTICOLOR: false,
+    DOWNLOADBAS: ()=>{download("splash.bas",get48pxBasic());},
+    DOWNLOADASM: ()=>{download("splash.asm",get48pxMonoASM());}
 },
   player48color: {
     ATARI_WIDTH: 48,
@@ -14,7 +16,10 @@ const modes = {
     ATARI_STARTHEIGHT:48,
     SCREEN_WIDTH_PER: 8,
     SCREEN_HEIGHT_PER: 5,
-    MULTICOLOR: true
+    MULTICOLOR: true,
+    DOWNLOADBAS: ()=>{download("splash.bas",get48pxBasic());},
+    DOWNLOADASM: ()=>{download("splash.asm",get48pxColorASM());}
+
   }
 }
 
@@ -84,7 +89,7 @@ rect:{
 }
 
 
-let currentMode;
+let currentKernelMode;
 let currentTool = 'draw';
 let currentToolFunctions = toolFunctions[currentTool];
 let currentInkMode = 'toggle';
@@ -112,7 +117,7 @@ let sx,sy,ex,ey;
 
 
 function setup() {
-  setCurrentMode(modes.player48color);
+  setKernelMode('player48color');
   for (let y = 0; y < H; y++) {
     yxGrid[y] = Array();
   }
@@ -122,7 +127,8 @@ function setup() {
 
 }
 
-function setCurrentMode(mode){
+function setKernelMode(modestring){
+  const mode = modes[modestring];
   W = mode.ATARI_WIDTH;
   H = mode.ATARI_STARTHEIGHT;
   PIXW = mode.SCREEN_WIDTH_PER;
@@ -130,19 +136,25 @@ function setCurrentMode(mode){
   document.getElementById("height").value = H;
   document.getElementById("maxheight").innerHTML = mode.ATARI_MAXHEIGHT;
   
+  document.getElementById("info").style.width = `${W*PIXW}px`;
+
   const colorToolElem = document.getElementById('colortool');
   colorToolElem.style.display = mode.MULTICOLOR ? 'block':'none';
   const colorPickShowElem = document.getElementById('hovercolorlabel');
   colorPickShowElem.style.display = mode.MULTICOLOR ? 'block':'none';
   
 
-  currentMode = mode;
+  const buttonDownloadBas = document.getElementById('downloadBas');
+  const buttonDownloadAsm = document.getElementById('downloadBas');
+
+
+  currentKernelMode = mode;
   fillBlankColorGridWithDefault();
   loop();
 }
 
 function fillBlankColorGridWithDefault(){
-  if(currentMode.MULTICOLOR){
+  if(currentKernelMode.MULTICOLOR){
     for(let y = 0; y < H; y++){
       if(! colorGrid[y]){
         colorGrid[y] = currentFGColor;
@@ -153,7 +165,7 @@ function fillBlankColorGridWithDefault(){
 
 function getColorForRow(y,half){
   const alpha = half?'87':'';
-  if(! currentMode.MULTICOLOR || ! colorGrid[y]) {
+  if(! currentKernelMode.MULTICOLOR || ! colorGrid[y]) {
     return `#${HUELUM2HEX[currentTVMode][currentFGColor]}${alpha}`;
   } else {
     return `#${HUELUM2HEX[currentTVMode][colorGrid[y]]}${alpha}`;
@@ -192,7 +204,7 @@ if(mouseIsPressed && currentToolFunctions.showHotSpots()){
 }
 
 
-if(currentMode.MULTICOLOR){
+if(currentKernelMode.MULTICOLOR){
   for(let y = 0; y < H; y++){
     noStroke();
     fill(getColorForRow(y));
@@ -323,7 +335,7 @@ function setNewHeight(){
 
   
 
-  if(isNaN(newHeight) || newHeight < 0 || newHeight > currentMode.ATARI_MAXHEIGHT){
+  if(isNaN(newHeight) || newHeight < 0 || newHeight > currentKernelMode.ATARI_MAXHEIGHT){
     elem.classList.add("error");
   }
 
@@ -420,7 +432,7 @@ function clickAtariColor(atariKey){
   document.getElementById('colorTable').style.visibility = "hidden";
   if(currentColorPickerTarget == 'fg') {
     setFGColor(atariKey);
-    if(currentMode.MULTICOLOR) {
+    if(currentKernelMode.MULTICOLOR) {
       document.getElementById("colortool").click();
     }
   }
