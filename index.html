@@ -6,6 +6,7 @@
 <script src="p5.min.js"></script>
 <script src="splash.js"></script>
 <script src="splash-templates.js"></script>
+<script src="splash-fonts.js"></script>
 <script src="ataricolors.js"></script>
 <meta name="viewport" content="width=500">
 <link rel="stylesheet" href="style.css">
@@ -37,6 +38,7 @@
                     <ul>
                         <li>copy/paste
                         <li>undo
+                        <li>local storage for drafts (or explicit save/new?)
                         <li>modes: ASM PF, bB PF, bB DPC+ PF
                         <li>text tool w/ fonts
                         <li>import from source code
@@ -63,14 +65,26 @@
             <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
             <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
 
-            <h2>color</h2>
-            <label><div class="fgbg">fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
-            <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
-            <label><div class="fgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
-            <div id="colorPickerHolder"></div>
-            <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
-            <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
-            
+            <div id="sectioncolor">
+                <label><div class="fgbg">fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
+                <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
+                <label><div class="fgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
+                <div id="colorPickerHolder"></div>
+
+                <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
+                <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
+            </div>
+
+
+            <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')" ><span>text</span></label>
+            <div id="sectiontext">
+                <input id="text" placeholder="Your Text Here" 
+                onchange='setTextPixels()' onkeyup="setTextPixels()">
+                <br>font: <select onchange="setFont(this.value);">
+                    <option>tiny3ishx4</option>
+                </select>
+            </div>
+
             <h2>inkmode</h2>
             <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
             <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>

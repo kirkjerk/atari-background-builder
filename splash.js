@@ -28,6 +28,7 @@ const toolFunctions = {
     mousePressed: (gridX,gridY) => {
       yxGrid[gridY][gridX] = currentInkBoolean;
     },
+    mouseMoved: ()=>{},
     mouseDragged: (sx,sy,ex,ey) => {
       const spots = getAllSpotsBetween(sx,sy,ex,ey); 
       spots.map((spot)=>{
@@ -42,6 +43,7 @@ const toolFunctions = {
     mousePressed: (gridX,gridY) => {
       colorGrid[gridY] = currentFGColor;
     },
+    mouseMoved: ()=>{},
     mouseDragged: (sx,sy,ex,ey) => {
       const spots = getAllSpotsBetween(sx,sy,ex,ey); 
       spots.map((spot)=>{
@@ -57,6 +59,7 @@ line:{
     currentStartMouseX = mouseX;
     currentStartMouseY = mouseY;
   },
+  mouseMoved: ()=>{},
   mouseDragged:(sx,sy,ex,ey) =>{
     currentHotSpots = getAllSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
   },
@@ -66,7 +69,7 @@ line:{
     });
     currentHotSpots = [];
   },
-  showHotSpots: () => true
+  showHotSpots: () => mouseIsPressed
 },
 
 rect:{
@@ -74,6 +77,7 @@ rect:{
     currentStartMouseX = mouseX;
     currentStartMouseY = mouseY;
   },
+  mouseMoved: ()=>{},
   mouseDragged:(sx,sy,ex,ey) =>{
     currentHotSpots = getAllRectSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
   },
@@ -83,8 +87,30 @@ rect:{
     });
     currentHotSpots = [];
   },
-  showHotSpots: () => true
-}
+  showHotSpots: () => mouseIsPressed
+},
+
+  text:{
+    mousePressed: (gridX,gridY) => {
+      currentHotSpots.map((spot)=>{
+        yxGrid[spot.y][spot.x] = currentInkBoolean;
+      });
+      currentHotSpots = [];
+    },
+    mouseMoved: (gridX,gridY)=>{
+      currentHotSpots = [];
+      currentTextPixels.forEach((pixel)=>{
+        currentHotSpots.push({x:gridX+pixel.x, y:gridY+pixel.y});
+      });
+      
+    },
+    mouseDragged:(sx,sy,ex,ey) =>{},
+    mouseReleased:()=>{},
+    showHotSpots: () => true    
+
+
+  }
+
 
 }
 
@@ -98,6 +124,8 @@ let currentTVMode = 'ntsc';
 let currentFGColor = '0E';
 let currentBGColor = '00';
 let currentColorPickerTarget='fg';
+let currentFont;
+let currentTextPixels = [];
 
 
 let W;
@@ -124,7 +152,8 @@ function setup() {
 
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
   makePicker();
-
+  setFont('tiny3ishx4');
+  //document.getElementById("picktext").click();
 }
 
 function setKernelMode(modestring){
@@ -195,7 +224,7 @@ stroke(getColorForRow(y));
 rect(x * PIXW, y * PIXH, PIXW, PIXH);
 
 // show hot spots for rect tool or line tool...
-if(mouseIsPressed && currentToolFunctions.showHotSpots()){
+if(currentToolFunctions.showHotSpots()){
   //half tone current color or black
   fill(currentInkBoolean ? getColorForRow(y,true) : `#00000087`);
     currentHotSpots.map((spot)=>{
@@ -259,6 +288,9 @@ function mouseDragged() {
 function mouseMoved(){
   if(mouseOutOfBounds()) return;
   showHoverColor();
+  const gridX = int(mouseX / PIXW);
+  const gridY = int(mouseY / PIXH);
+  currentToolFunctions.mouseMoved(gridX,gridY);
   loop();
 }
 
@@ -314,9 +346,19 @@ function getAllSpotsBetween(sx,sy,ex,ey){
 
 
 
+const toolsWithSections = ["text","color"];
+
 function setTool(what){
   currentTool = what;   
   currentToolFunctions = toolFunctions[what];
+
+  toolsWithSections.forEach((tool) => {
+    document.getElementById(`section${tool}`).style.display = 'none';
+  });
+  if(toolsWithSections.includes(what)) {
+    document.getElementById(`section${what}`).style.display = 'block';
+  }
+
 }
 
 function setInkmode(what){
@@ -476,5 +518,72 @@ function showFGorBGColor(elem, atariColor){
   loop();
 }
 
+
+function setFont(fontname) {
+  currentFont = fonts[fontname];
+  setTextPixels();
+}
+function setTextPixels(){
+  const text = document.getElementById('text').value;
+  const letters = text.split("");
+
+  const letterToLines = {};
+
+  const fontLines = currentFont.split('\n');
+  const fontWidth = int(fontLines[0]);
+  const fontHeight = int(fontLines[1]);
+  let ptr = 2;
+  while(ptr < fontLines.length){
+    let buf = "";
+    const c = fontLines[ptr];
+    for(let i = 1; i <= fontHeight; i++){
+      buf += `${fontLines[ptr + i ]}\n`;
+    }
+    letterToLines[c] = buf;
+    ptr += int(fontHeight) + 1;
+  }
+  
+  let left = 0;
+
+  currentTextPixels = [];
+
+  letters.forEach((letter)=>{
+    if(letter === ' ') {
+      left += 2;
+    } else {
+      const {pixels,width} = parseLetterLines(letterToLines[letter],left);
+      currentTextPixels = currentTextPixels.concat(pixels);
+      left += width;
+    }
+  });
+  loop();
+}
+
+function parseLetterLines(linebuf, startWidth){
+  const lines = linebuf.split("\n");
+
+  const rawpairs = [];
+  let maxX = 0;
+  for(let y = 0; y < lines.length; y++){
+    const line = lines[y];
+    const bits = line.split('');
+    for(let x = 0; x < bits.length; x++){
+      const bit = bits[x];
+      if(bit === 'X') {
+        rawpairs.push({x,y});
+        if(x > maxX) maxX = x;
+      }
+
+    }
+  }
+  const width = maxX + 2;
+  const pixels = [];
+  rawpairs.forEach((pair)=>{
+    let {x,y} = pair;
+    x += startWidth;
+    pixels.push({x,y});
+  });
+  return {pixels,width};
+}
 
 

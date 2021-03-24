@@ -110,3 +110,10 @@ select {
     font-size: 20px;
     display: block;
 }
+#sectiontext,
+#sectioncolor {
+    display: none;
+    margin-left: 20px;
+    background-color: #555;
+    padding: 4px;
+}
