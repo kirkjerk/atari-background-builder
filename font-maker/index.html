@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=580">
 <title>font-maker</title>
-<script src="p5.min.js"></script>
+<script src="../p5.min.js"></script>
 <script src="font-maker.js"></script>
 
 <style>
@@ -27,18 +27,44 @@
         width:500px;
         margin:auto;
     }    
+    input {
+        width:1.5em;
+    }
+    table {
+        margin:auto;
+    }
+
+
 </style>
 
 </head>
 <body>
-  <div id="canvasParent"></div>
+  
     <h2>font-maker</h2>
+        <table>
+            <tr>
+                <td>Character Size (in TIA pixels): </td>
+                <td><input id="GRIDX" onchange="updateFromWxHForm()">x<input id="GRIDY" onchange="updateFromWxHForm()"></td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <button onclick="makeFontString()">make font string</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <textarea id="output"></textarea>
+                </td>                
+            </tr>
+        </table>
+    <div id="canvasParent"></div>
 
 <p></p>
 
-<script>
-//  createCanvas(560, 560).parent('canvasParent');
 
-</script>
+
+
+
+
 </body>
 </html>
