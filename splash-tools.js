@@ -209,17 +209,24 @@ function getAllRectSpotsBetween(sx,sy,ex,ey){
         
         let lowestX = W;
         let lowestY = H;
+        let highestX = 0;
+        let highestY = 0;
 
         currentHotSpots.forEach((spot) => {
             if(spot.x < lowestX) lowestX = spot.x;
             if(spot.y < lowestY) lowestY = spot.y;
+            if(spot.x > highestX) highestX = spot.x;
+            if(spot.y > highestY) highestY = spot.y;
         });
+
+        const offsetX = int ((lowestX + highestX) / 2);
+        const offsetY = int ((lowestY + highestY) / 2);
         
-        const offsetX = int(currentStartMouseX/PIXW);
-        const offsetY = int(currentStartMouseY/PIXH);
+        //const offsetX = int(currentStartMouseX/PIXW);
+        //const offsetY = int(currentStartMouseY/PIXH);
         currentHotSpots.forEach((spot) => {
             if(yxGrid[spot.y][spot.x]) {
-                currentClipboard.push({x:spot.x - lowestX, y: spot.y - lowestY});
+                currentClipboard.push({x:spot.x - offsetX, y: spot.y - offsetY});
                 if(remove) yxGrid[spot.y][spot.x] = false;
             }
         });
