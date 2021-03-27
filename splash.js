@@ -1,118 +1,9 @@
 
-const modes = {
-  player48mono: {
-    ATARI_WIDTH: 48,
-    ATARI_MAXHEIGHT: 192,
-    ATARI_STARTHEIGHT:48,
-    SCREEN_WIDTH_PER: 8,
-    SCREEN_HEIGHT_PER: 5,
-    MULTICOLOR: false,
-    DOWNLOADBAS: ()=>{download("splash.bas",get48pxBasic());},
-    DOWNLOADASM: ()=>{download("splash.asm",get48pxMonoASM());}
-},
-  player48color: {
-    ATARI_WIDTH: 48,
-    ATARI_MAXHEIGHT: 192,
-    ATARI_STARTHEIGHT:48,
-    SCREEN_WIDTH_PER: 8,
-    SCREEN_HEIGHT_PER: 5,
-    MULTICOLOR: true,
-    DOWNLOADBAS: ()=>{download("splash.bas",get48pxBasic());},
-    DOWNLOADASM: ()=>{download("splash.asm",get48pxColorASM());}
-
-  }
-}
-
-const toolFunctions = {
-  draw: {
-    mousePressed: (gridX,gridY) => {
-      yxGrid[gridY][gridX] = currentInkBoolean;
-    },
-    mouseMoved: ()=>{},
-    mouseDragged: (sx,sy,ex,ey) => {
-      const spots = getAllSpotsBetween(sx,sy,ex,ey); 
-      spots.map((spot)=>{
-        yxGrid[spot.y][spot.x] = currentInkBoolean;
-      });
-    },
-    mouseReleased:() => {},
-    showHotSpots: () => false
-  },
-
-  color: {
-    mousePressed: (gridX,gridY) => {
-      colorGrid[gridY] = currentFGColor;
-    },
-    mouseMoved: ()=>{},
-    mouseDragged: (sx,sy,ex,ey) => {
-      const spots = getAllSpotsBetween(sx,sy,ex,ey); 
-      spots.map((spot)=>{
-        colorGrid[spot.y] = currentFGColor;
-      });
-    },
-    mouseReleased:() => {},
-    showHotSpots: () => false
-  },
-
-line:{
-  mousePressed: (gridX,gridY) => {
-    currentStartMouseX = mouseX;
-    currentStartMouseY = mouseY;
-  },
-  mouseMoved: ()=>{},
-  mouseDragged:(sx,sy,ex,ey) =>{
-    currentHotSpots = getAllSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
-  },
-  mouseReleased:()=>{
-    currentHotSpots.map((spot)=>{
-      yxGrid[spot.y][spot.x] = currentInkBoolean;
-    });
-    currentHotSpots = [];
-  },
-  showHotSpots: () => mouseIsPressed
-},
-
-rect:{
-  mousePressed: (gridX,gridY) => {
-    currentStartMouseX = mouseX;
-    currentStartMouseY = mouseY;
-  },
-  mouseMoved: ()=>{},
-  mouseDragged:(sx,sy,ex,ey) =>{
-    currentHotSpots = getAllRectSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
-  },
-  mouseReleased:()=>{
-    currentHotSpots.map((spot)=>{
-      yxGrid[spot.y][spot.x] = currentInkBoolean;
-    });
-    currentHotSpots = [];
-  },
-  showHotSpots: () => mouseIsPressed
-},
-
-  text:{
-    mousePressed: (gridX,gridY) => {
-      currentHotSpots.map((spot)=>{
-        yxGrid[spot.y][spot.x] = currentInkBoolean;
-      });
-      currentHotSpots = [];
-    },
-    mouseMoved: (gridX,gridY)=>{
-      currentHotSpots = [];
-      currentTextPixels.forEach((pixel)=>{
-        currentHotSpots.push({x:gridX+pixel.x, y:gridY+pixel.y});
-      });
-      
-    },
-    mouseDragged:(sx,sy,ex,ey) =>{},
-    mouseReleased:()=>{},
-    showHotSpots: () => true    
 
 
-  }
 
 
-}
+
 
 
 let currentKernelMode;
@@ -126,16 +17,16 @@ let currentBGColor = '00';
 let currentColorPickerTarget='fg';
 let currentFont;
 let currentTextPixels = [];
-
+let currentStartMouseX;
+let currentStartMouseY;
+let currentHotSpots = [];
+let currentClipboard = [];
 
 let W;
 let H;
 let PIXW;
 let PIXH;
 
-let currentStartMouseX;
-let currentStartMouseY;
-let currentHotSpots = [];
 
 let yxGrid = Array();
 let colorGrid = Array();
@@ -221,7 +112,9 @@ let x = int(mouseX/PIXW);
 let y = int(mouseY/PIXH);
 noFill();
 stroke(getColorForRow(y));
-rect(x * PIXW, y * PIXH, PIXW, PIXH);
+if(currentToolFunctions.showHover()){
+  rect(x * PIXW, y * PIXH, PIXW, PIXH);
+}
 
 // show hot spots for rect tool or line tool...
 if(currentToolFunctions.showHotSpots()){
@@ -252,20 +145,15 @@ function showHoverColor(){
   document.getElementById("hovercolor").innerHTML = color?color:'';
 }
 
-function mouseOutOfBounds(){
-  return (mouseX < 0 || mouseX > width || mouseY < 0 || mouseY > height);
-}
 
 
 function mousePressed() {
-if(mouseOutOfBounds()) return;
-
 
 const gridX = int(mouseX / PIXW);
 const gridY = int(mouseY / PIXH);
 
 if(currentInkMode == 'toggle') {
-  currentInkBoolean = !yxGrid[gridY][gridX];
+  currentInkBoolean = !getInYXGrid(gridX,gridY);
 } else {
   currentInkBoolean = (currentInkMode == 'draw');
 }
@@ -274,7 +162,6 @@ currentToolFunctions.mousePressed(gridX,gridY);
 }
 
 function mouseDragged() {
-  if(mouseOutOfBounds()) return;
   const sx = pmouseX;
   const sy = pmouseY;
   const ex = mouseX;
@@ -286,7 +173,6 @@ function mouseDragged() {
 }
 
 function mouseMoved(){
-  if(mouseOutOfBounds()) return;
   showHoverColor();
   const gridX = int(mouseX / PIXW);
   const gridY = int(mouseY / PIXH);
@@ -295,58 +181,14 @@ function mouseMoved(){
 }
 
 function mouseReleased(){  
-  if(mouseOutOfBounds()) return;
   currentToolFunctions.mouseReleased();
   loop();
 }
 
-//take the mouse x,y for start and end,
-//return an array of {x:__,y:__} spots that are in rectangle inbetween
-
-function getAllRectSpotsBetween(sx,sy,ex,ey){
-const gsx = min(int(sx / PIXW),int(ex / PIXW));
-const gsy = min(int(sy / PIXH),int(ey / PIXH));
-const gex = max(int(sx / PIXW),int(ex / PIXW));
-const gey = max(int(sy / PIXH),int(ey / PIXH));
-const results = [];
-for(x = gsx; x <= gex; x++){
-  for(y = gsy; y <= gey; y++){
-    results.push({x,y});
-  }
-}
-return results;
-
-}
-
-//take the mouse x,y for start and end,
-//return an array of {x:__,y:__} spots that are inbetween
-function getAllSpotsBetween(sx,sy,ex,ey){
-  const spots = {};
-  const quantize = 400;
-  for(let i = 0; i < quantize; i++){
-    const tx = map(i,1,quantize,sx,ex); 
-    const ty = map(i,1,quantize,sy,ey);
-    const x = int(tx / PIXW);
-    const y = int(ty / PIXH);
-    if(x >= 0 && x < W && y >= 0 && y < H) {
-        if(x >= 0 && x < W && y >= 0 && y < H) {
-          spots[`${x}:${y}`] = true;
-        }
-    }
-  } 
-  
-  const results = [];
-  
-  (Object.keys(spots).map((joint)=>{ 
-      const[x,y] = joint.split(":");
-      results.push({x,y});    
-  }));
-  return results;
-}
 
 
 
-const toolsWithSections = ["text","color"];
+const toolsWithSections = ["text","color","select"];
 
 function setTool(what){
   currentTool = what;   
@@ -358,6 +200,8 @@ function setTool(what){
   if(toolsWithSections.includes(what)) {
     document.getElementById(`section${what}`).style.display = 'block';
   }
+  currentHotSpots = [];
+  loop();
 
 }
 

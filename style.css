@@ -111,7 +111,8 @@ select {
     display: block;
 }
 #sectiontext,
-#sectioncolor {
+#sectioncolor,
+#sectionselect {
     display: none;
     margin-left: 20px;
     background-color: #555;

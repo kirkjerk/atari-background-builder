@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <title>splash-o-matic 2600</title>
 <script src="p5.min.js"></script>
+<script src="splash-tools.js"></script>
+<script src="splash-modes.js"></script>
 <script src="splash.js"></script>
 <script src="splash-templates.js"></script>
 <script src="splash-fonts.js"></script>
@@ -33,26 +35,33 @@
                 <p>Note that the generated code samples are not going to well-tuned for ROM usage etc, epecially
                     in terms of colors.
                 </p>
+              
+                <h2>thanks</h2>
+                <ul>
+                    <li>Karl Garrison for 48px kernels
+                </ul>
+                <h2>source</h2>
+                <a href="https://github.com/kirkjerk/splash-o-matic">Fork me at github</a>.
+                You can also download the zip for your own personal offline use!
+
+                <h2>request</h2>
+                If you find this tool useful, drop me a line at kirkjerk@gmail.com
+                or a shoutout to @kisrael at <a href="https://atariage.com/forums">Atari Age Forums</a>
+    
                 <h2>todo</h2>
-                    (no promises)
-                    <ul>
-                        <li>copy/paste
-                        <li>undo
-                        <li>local storage for drafts (or explicit save/new?)
-                        <li>modes: ASM PF, bB PF, bB DPC+ PF
-                        <li>text tool w/ fonts
-                        <li>import from source code
-                        <li>import from graphic file
-                        
-                    </ul>
-                    <h2>thanks</h2>
-                    <ul>
-                        <li>Karl Garrison for 48px kernels
-                    </ul>
-                    <h2>source</h2>
-                    <a href="https://github.com/kirkjerk/splash-o-matic">Fork me at github</a>
-        
-        
+                
+                <ul>
+                    <li>copy/paste
+                    <li>more fonts
+                    <li>undo
+                    <li>local storage for drafts (or explicit save/new?)
+                    <li>modes: ASM PF, bB PF, bB DPC+ PF
+                    <li>share text tool, dynamic fonts
+                    <li>import from source code
+                    <li>import from graphic file
+                    
+                </ul>
+                (no promises when I'll get around to things!)
         
             </div>        
         
@@ -84,6 +93,13 @@
                     <option>tiny3ishx4</option>
                 </select>
             </div>
+
+            <label><input type="radio" name="tool" onclick="setTool('select')"><span>select</span></label>
+            <div id="sectionselect"> 
+                <button onclick="doCopy();">copy</button><button onclick="doCut();">cut</button>
+            </div>
+            <label><input id="toolpaste" type="radio" name="tool" onclick="setTool('paste')"><span>paste</span></label>
+
 
             <h2>inkmode</h2>
             <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
