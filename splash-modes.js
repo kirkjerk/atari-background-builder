@@ -2,7 +2,7 @@ const modes = {
     player48mono: {
       ATARI_WIDTH: 48,
       ATARI_MAXHEIGHT: 192,
-      ATARI_STARTHEIGHT:48,
+      ATARI_STARTHEIGHT:75,
       SCREEN_WIDTH_PER: 8,
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: false,
@@ -12,7 +12,7 @@ const modes = {
     player48color: {
       ATARI_WIDTH: 48,
       ATARI_MAXHEIGHT: 192,
-      ATARI_STARTHEIGHT:48,
+      ATARI_STARTHEIGHT:75,
       SCREEN_WIDTH_PER: 8,
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: true,

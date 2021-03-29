@@ -51,14 +51,12 @@
                 <h2>todo</h2>
                 
                 <ul>
-                    <li>copy/paste
                     <li>more fonts
                     <li>undo
                     <li>local storage for drafts (or explicit save/new?)
                     <li>modes: ASM PF, bB PF, bB DPC+ PF
                     <li>share text tool, dynamic fonts
                     <li>import from source code
-                    <li>import from graphic file
                     
                 </ul>
                 (no promises when I'll get around to things!)
@@ -116,6 +114,18 @@
 
             <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
             <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download splash.asm</button>
+
+
+            <h2>import image file</h2>
+                (All files handled locally in browser.)
+                <div id="fileButtonWrapper"></div>
+                <!-- <button onclick="readImage()">convert file</button> -->
+                <label>contrast:
+                <input type="range" id="contrast" 
+                min="0" max="255" value="128" onchange="handleContrast();"></label>
+                <label><input type="checkbox" id="invert" onchange="handleInvert();">invert</label>
+            </details>
+
 
         </div>
     </div>    

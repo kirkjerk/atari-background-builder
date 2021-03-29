@@ -22,6 +22,11 @@ let currentStartMouseY;
 let currentHotSpots = [];
 let currentClipboard = [];
 
+let currentUploadedImage;
+let currentShowingUploadedImage;
+let currentcurrentContrast = 128;
+let currentInvert = false;
+
 let W;
 let H;
 let PIXW;
@@ -35,17 +40,45 @@ let colorGrid = Array();
 let sx,sy,ex,ey;
 
 
+
+function preload(){
+  // currentUploadedImage = loadImage('doublefine.png');
+  // currentShowingUploadedImage = currentUploadedImage;
+}
+
 function setup() {
   setKernelMode('player48color');
-  for (let y = 0; y < H; y++) {
-    yxGrid[y] = Array();
-  }
-
+  clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
   makePicker();
   setFont('tiny3ishx4');
   //document.getElementById("picktext").click();
+
+
+  createFileInput(loadImageFile).parent("fileButtonWrapper");
+
+
 }
+
+function clearYXGrid() {
+  for (let y = 0; y < H; y++) {
+    yxGrid[y] = Array();
+  }
+}
+
+
+function loadImageFile(file){
+  if (file.type === 'image') {
+    currentUploadedImage = createImg(file.data, '');
+    currentUploadedImage.hide();
+    readImage();
+    loop();
+
+  } else {
+    currentUploadedImage = null;
+  }  
+}
+
 
 function setKernelMode(modestring){
   const mode = modes[modestring];
@@ -62,11 +95,6 @@ function setKernelMode(modestring){
   colorToolElem.style.display = mode.MULTICOLOR ? 'block':'none';
   const colorPickShowElem = document.getElementById('hovercolorlabel');
   colorPickShowElem.style.display = mode.MULTICOLOR ? 'block':'none';
-  
-
-  const buttonDownloadBas = document.getElementById('downloadBas');
-  const buttonDownloadAsm = document.getElementById('downloadBas');
-
 
   currentKernelMode = mode;
   fillBlankColorGridWithDefault();
@@ -95,6 +123,11 @@ function getColorForRow(y,half){
 
 function draw() {
   background(`#${HUELUM2HEX[currentTVMode][currentBGColor]}`);
+  
+  if(currentShowingUploadedImage){
+      image(currentShowingUploadedImage, 0, 0, width, height);
+  }
+  
   noStroke();
 
 
@@ -126,13 +159,13 @@ if(currentToolFunctions.showHotSpots()){
 }
 
 
-if(currentKernelMode.MULTICOLOR){
+if(currentKernelMode.MULTICOLOR && ! currentShowingUploadedImage){
   for(let y = 0; y < H; y++){
     noStroke();
     fill(getColorForRow(y));
     rect(0,y * PIXH,PIXW/4,PIXH);
   }
-}
+} 
 
 
 noLoop();
@@ -430,4 +463,82 @@ function parseLetterLines(linebuf, startWidth){
   return {pixels,width};
 }
 
+/**
+ *
+function readImageFromArray(){
+  if(! currentUploadedImage) return;
+  clearYXGrid();
 
+  currentShowingUploadedImage = currentUploadedImage;
+  loop();
+  loadPixels();
+  console.log(pixels);
+  const d = pixelDensity();
+  for(let x = 0; x < W; x++){
+    for(let y = 0; y < H; y++){
+      const squareBoolean = readSquareFromArray(x,y,pixels,d);
+      //console.log(squareBoolean);
+      yxGrid[y][x] = !currentInvert ? squareBoolean: !squareBoolean ;
+    }
+  }
+}
+
+function readSquareFromArray(x,y,pixels,d){
+  const squarecount = PIXW * PIXH; 
+  let sum = 0;
+  for(let px = x * PIXW; px < (x+1) * PIXW; px++){
+    for(let py = y * PIXH; py < (y+1) * PIXH ; py++){
+      // see https://p5js.org/reference/#/p5/pixels for example that has to loop over the density??
+      const loc = 4 * d *  (x + (width * y)); //this needs to be fixed: 
+      const r = pixels[loc];
+      const g = pixels[loc+1];
+      const b = pixels[loc+2];
+      console.log({loc,r,g,b});
+      sum += (r + g + b) / 3;
+    }
+  }
+ // console.log((sum / squarecount),currentcurrentContrast,(sum / squarecount) > currentcurrentContrast);
+  return (sum / squarecount) > currentcurrentContrast;
+}
+**/
+
+function readImage(){
+  if(! currentUploadedImage) return;
+  clearYXGrid();
+
+  currentShowingUploadedImage = currentUploadedImage;
+  loop();
+  for(let x = 0; x < W; x++){
+    for(let y = 0; y < H; y++){
+      const squareBoolean = readSquare(x,y);
+      //console.log(squareBoolean);
+      yxGrid[y][x] = !currentInvert ? squareBoolean: !squareBoolean ;
+    }
+  }
+  console.log('parsed image');
+  currentShowingUploadedImage = null;
+  loop();
+}
+
+function readSquare(x,y){
+  const squarecount = PIXW * PIXH; 
+  let sum = 0;
+  for(let px = x * PIXW; px < (x+1) * PIXW; px++){
+    for(let py = y * PIXH; py < (y+1) * PIXH ; py++){
+      const [r,g,b,a] = get(px,py);
+      sum += (r + g + b) / 3;
+    }
+  }
+ // console.log((sum / squarecount),currentcurrentContrast,(sum / squarecount) > currentcurrentContrast);
+  return (sum / squarecount) > currentcurrentContrast;
+}
+
+function handleContrast(){
+  currentcurrentContrast = document.getElementById("contrast").value;
+  readImage();
+}
+
+function handleInvert(){
+  currentInvert = document.getElementById("invert").checked;
+  readImage();
+}
