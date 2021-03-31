@@ -31,7 +31,7 @@
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
                 <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
                     batari Basic</a> 
-                    may be helpful)</p>
+                    may be helpful. We recommend <a href="https://marketplace.visualstudio.com/items?itemName=chunkypixel.atari-dev-studio">Atari Dev Studio</a> for VS Code.)</p>
                 <p>Note that the generated code samples are not going to well-tuned for ROM usage etc, epecially
                     in terms of colors.
                 </p>
@@ -51,13 +51,26 @@
                 <h2>todo</h2>
                 
                 <ul>
+                    <li>BUG: image import fails if starting at DPC mode?
+                    <li>improve import:
+                    <ul>
+                        <li>progress display and failure
+                        <li>auto-contrast on first load 
+                    </ul>
                     <li>more fonts
                     <li>undo
                     <li>local storage for drafts (or explicit save/new?)
-                    <li>modes: ASM PF, bB PF, bB DPC+ PF
+                    <li>new kernel modes: Assembly PFs, others?
+                    <li>add background (not just PF) colors to DPC+ mode
                     <li>share text tool, dynamic fonts
                     <li>import from source code
-                    
+                    <li>description of each kernel...
+                    <li>minor tweaks:
+                    <ul>
+                        <li> make ink mode a dropdown
+                        <li> rearrange toolbar
+                        <li> hide like image import stuff
+                    </ul>
                 </ul>
                 (no promises when I'll get around to things!)
         
@@ -110,6 +123,8 @@
             <select onchange='setKernelMode(this.value);'>
                 <option value="player48color" selected>48px player color</option>
                 <option value="player48mono">48px player mono</option>
+                <option value="bbPFcolors">bB color PF</option>
+                <option value="bbPFDPCcolors">bB DPC+ color PF</option>
             </select>
 
             <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
@@ -117,7 +132,9 @@
 
 
             <h2>import image file</h2>
-                (All files handled locally in browser.)
+                (Web formats (JPG, PNG, etc) supported.
+                <br>
+                All files handled locally in browser.)
                 <div id="fileButtonWrapper"></div>
                 <!-- <button onclick="readImage()">convert file</button> -->
                 <label>contrast:

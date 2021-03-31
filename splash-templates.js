@@ -412,3 +412,132 @@ ${colorblock}
     
 `;   
 }
+function getBBPFColors() {
+   const pixelblock = getBBPixelBlock();
+   const colorblock = getBBColorBlock();
+
+   return `    set kernel_options pfcolors 
+startLoop
+
+    COLUBK=$${currentBGColor}      
+
+      playfield:
+${pixelblock}end 
+
+  pfcolors:
+${colorblock}end
+
+ drawscreen
+ goto startLoop  
+ `;
+}
+
+
+function getBBPFDPCColors(){
+   const pixelblock = getBBPixelBlock();
+   const colorblock = getBBColorBlock();
+
+   return `   set kernel DPC+
+
+   
+   dim _Bit0_Reset_Restrainer = y
+   dim _Bit7_Flip_Scroll = y
+
+   goto __Bank_2 bank2
+
+   bank 2
+   temp1=temp1
+
+__Bank_2
+
+__Start_Restart
+
+   drawscreen
+   pfclear
+   AUDV0 = 0 : AUDV1 = 0
+   a = 0 : b = 0 : c = 0 : d = 0 : e = 0 : f = 0 : g = 0 : h = 0 : i = 0
+   j = 0 : k = 0 : l = 0 : m = 0 : n = 0 : o = 0 : p = 0 : q = 0 : r = 0
+   s = 0 : t = 0 : u = 0 : v = 0 : w = 0 : x = 0 : y = 0 : z = 0
+   var0 = 0 : var1 = 0 : var2 = 0 : var3 = 0 : var4 = 0
+   var5 = 0 : var6 = 0 : var7 = 0 : var8 = 0
+
+
+   playfield:
+   ${pixelblock}end 
+   
+     pfcolors:
+   ${colorblock}end
+
+
+
+
+   ;************************************************************
+   _Bit0_Reset_Restrainer{0} = 1
+
+
+__Main_Loop
+
+   ;***************************************************************
+   ;
+   ;  88 rows that are 2 scanlines high.
+   ;
+   DF6FRACINC = 255 ; Background colors.
+   DF4FRACINC = 255 ; Playfield colors.
+
+   DF0FRACINC = 128 ; Column 0.
+   DF1FRACINC = 128 ; Column 1.
+   DF2FRACINC = 128 ; Column 2.
+   DF3FRACINC = 128 ; Column 3.
+
+   drawscreen
+
+
+   if !switchreset then _Bit0_Reset_Restrainer{0} = 0 : goto __Main_Loop
+
+   if _Bit0_Reset_Restrainer{0} then goto __Main_Loop
+
+   goto __Start_Restart
+
+
+
+   bank 3
+   temp1=temp1
+
+
+
+   bank 4
+   temp1=temp1
+
+
+
+   bank 5
+   temp1=temp1
+
+
+
+   bank 6
+   temp1=temp1
+`;
+}
+
+
+
+function getBBPixelBlock() {
+   let pixelblock = '';
+   for(let y = 0; y < H; y++){
+      for(let x = 0; x < W; x++){
+         pixelblock += yxGrid[y][x]?'X':'.';
+      }
+      pixelblock += '\n';
+   }
+   return pixelblock;
+}
+function getBBColorBlock(){
+   let colorblock = '';
+
+   for(let y = 0; y < H; y++){
+      colorblock += `   $${colorGrid[y]}\n`
+   } 
+   return colorblock;
+}
+

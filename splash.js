@@ -61,7 +61,8 @@ function setup() {
 }
 
 function clearYXGrid() {
-  for (let y = 0; y < H; y++) {
+  
+  for (let y = 0; y < 256; y++) {
     yxGrid[y] = Array();
   }
 }
@@ -82,12 +83,17 @@ function loadImageFile(file){
 
 function setKernelMode(modestring){
   const mode = modes[modestring];
-  W = mode.ATARI_WIDTH;
-  H = mode.ATARI_STARTHEIGHT;
-  PIXW = mode.SCREEN_WIDTH_PER;
-  PIXH = mode.SCREEN_HEIGHT_PER;
+
+  const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
+        SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
+        DOWNLOADBAS, DOWNLOADASM} = mode;
+
+  W = ATARI_WIDTH;
+  H = ATARI_STARTHEIGHT;
+  PIXW = SCREEN_WIDTH_PER;
+  PIXH = SCREEN_HEIGHT_PER;
   document.getElementById("height").value = H;
-  document.getElementById("maxheight").innerHTML = mode.ATARI_MAXHEIGHT;
+  document.getElementById("maxheight").innerHTML = ATARI_MAXHEIGHT;
   
   document.getElementById("info").style.width = `${W*PIXW}px`;
 
@@ -96,8 +102,14 @@ function setKernelMode(modestring){
   const colorPickShowElem = document.getElementById('hovercolorlabel');
   colorPickShowElem.style.display = mode.MULTICOLOR ? 'block':'none';
 
+  document.getElementById("buttonDownloadBas").style.display = DOWNLOADBAS ? 'inline-block' : 'none';
+  document.getElementById("buttonDownloadAsm").style.display = DOWNLOADASM ? 'inline-block' : 'none';
+
   currentKernelMode = mode;
   fillBlankColorGridWithDefault();
+  
+  
+  resizeCanvas(ATARI_WIDTH*SCREEN_WIDTH_PER, ATARI_MAXHEIGHT * SCREEN_HEIGHT_PER);
   loop();
 }
 
@@ -130,11 +142,11 @@ function draw() {
   
   noStroke();
 
-
+const horizgapsize = currentKernelMode.HORIZGAP ? 2 : 0
 for (let x = 0; x < W; x++) {
   for (let y = 0; y < H; y++) {
     fill(getColorForRow(y));
-    if (yxGrid[y][x]) rect(x * PIXW, y * PIXH, PIXW, PIXH);
+    if (yxGrid[y][x]) rect(x * PIXW, y * PIXH, PIXW, PIXH-horizgapsize);
   }
 
 }
@@ -500,7 +512,7 @@ function readSquareFromArray(x,y,pixels,d){
  // console.log((sum / squarecount),currentcurrentContrast,(sum / squarecount) > currentcurrentContrast);
   return (sum / squarecount) > currentcurrentContrast;
 }
-**/
+**/ 
 
 function readImage(){
   if(! currentUploadedImage) return;
