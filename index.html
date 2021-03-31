@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>splash-o-matic 2600</title>
+<title>splash-o-matic 2600 - large graphic editor for atari programmers</title>
 <script src="p5.min.js"></script>
 <script src="splash-tools.js"></script>
 <script src="splash-modes.js"></script>
@@ -25,10 +25,13 @@
         <div class="center">
             <h1>splash-o-matic 2600</h1>
             <div id="canvasParent"></div>
+
+            <center id="importmsg">IMPORTING IMAGE...</center>
         
             <div id="info">
                 <h2>what is this?</h2>
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
+                <p>It can generate sample code for 48px sprite-based or various PlayField images.</p>
                 <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
                     batari Basic</a> 
                     may be helpful. We recommend <a href="https://marketplace.visualstudio.com/items?itemName=chunkypixel.atari-dev-studio">Atari Dev Studio</a> for VS Code.)</p>
@@ -46,17 +49,12 @@
 
                 <h2>request</h2>
                 If you find this tool useful, drop me a line at kirkjerk@gmail.com
-                or a shoutout to @kisrael at <a href="https://atariage.com/forums">Atari Age Forums</a>
+                or a shoutout to @kisrael at <a href="https://atariage.com/forums">Atari Age Forums</a>,
+                or ping Kirk Israel on Facebook. 
     
                 <h2>todo</h2>
                 
                 <ul>
-                    <li>BUG: image import fails if starting at DPC mode?
-                    <li>improve import:
-                    <ul>
-                        <li>progress display and failure
-                        <li>auto-contrast on first load 
-                    </ul>
                     <li>more fonts
                     <li>undo
                     <li>local storage for drafts (or explicit save/new?)

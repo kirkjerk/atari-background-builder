@@ -118,3 +118,7 @@ select {
     background-color: #555;
     padding: 4px;
 }
+
+#importmsg {
+    visibility: hidden;
+}

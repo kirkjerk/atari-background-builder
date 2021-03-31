@@ -24,8 +24,10 @@ let currentClipboard = [];
 
 let currentUploadedImage;
 let currentShowingUploadedImage;
-let currentcurrentContrast = 128;
+let currentContrast = 128;
 let currentInvert = false;
+
+
 
 let W;
 let H;
@@ -47,6 +49,7 @@ function preload(){
 }
 
 function setup() {
+  
   setKernelMode('player48color');
   clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
@@ -61,10 +64,14 @@ function setup() {
 }
 
 function clearYXGrid() {
-  
+  yxGrid = makeUpBlankGrid();
+}
+function makeUpBlankGrid(){
+  const grid = Array();
   for (let y = 0; y < 256; y++) {
-    yxGrid[y] = Array();
+    grid[y] = Array();
   }
+  return grid;
 }
 
 
@@ -72,8 +79,8 @@ function loadImageFile(file){
   if (file.type === 'image') {
     currentUploadedImage = createImg(file.data, '');
     currentUploadedImage.hide();
-    readImage();
-    loop();
+    launchReadImage(true);
+    draw();
 
   } else {
     currentUploadedImage = null;
@@ -134,6 +141,7 @@ function getColorForRow(y,half){
 
 
 function draw() {
+
   background(`#${HUELUM2HEX[currentTVMode][currentBGColor]}`);
   
   if(currentShowingUploadedImage){
@@ -477,6 +485,10 @@ function parseLetterLines(linebuf, startWidth){
 
 /**
  *
+ * 
+ * At some point the following might be more effecient way of 
+ * reading in the damn pixels, but couldn't quite get it to work
+ * 
 function readImageFromArray(){
   if(! currentUploadedImage) return;
   clearYXGrid();
@@ -509,30 +521,89 @@ function readSquareFromArray(x,y,pixels,d){
       sum += (r + g + b) / 3;
     }
   }
- // console.log((sum / squarecount),currentcurrentContrast,(sum / squarecount) > currentcurrentContrast);
-  return (sum / squarecount) > currentcurrentContrast;
+ // console.log((sum / squarecount),currentContrast,(sum / squarecount) > currentContrast);
+  return (sum / squarecount) > currentContrast;
 }
 **/ 
-
-function readImage(){
+function currentLoadingDisplay(show) {
+  document.getElementById('importmsg').style.visibility = show ? 'visible':'hidden';
+}
+// we want to update screen elements but with a timeout to get it out of the redraw loop
+function launchReadImage(adjustContrast) {
   if(! currentUploadedImage) return;
-  clearYXGrid();
+  currentLoadingDisplay(true);
+  setTimeout(()=>{readImage(adjustContrast)}, 0);
+}
 
+function readImage(adjustContrast){
+  clearYXGrid();
+  
   currentShowingUploadedImage = currentUploadedImage;
-  loop();
-  for(let x = 0; x < W; x++){
-    for(let y = 0; y < H; y++){
-      const squareBoolean = readSquare(x,y);
-      //console.log(squareBoolean);
-      yxGrid[y][x] = !currentInvert ? squareBoolean: !squareBoolean ;
-    }
+  draw();
+
+  
+  if(adjustContrast) {
+    const {contrast,grid} = findGridWithBestContrast();
+    yxGrid = grid;
+    
+    document.getElementById("contrast").value = contrast;
+  } else {
+    const {grid,pixelCount} = resampleImage(currentContrast);
+    yxGrid = grid; 
+    console.log(adjustContrast,pixelCount,W*H);
   }
   console.log('parsed image');
   currentShowingUploadedImage = null;
-  loop();
+  currentLoadingDisplay(false);
+  draw();
 }
 
-function readSquare(x,y){
+
+// we guesstimate that good images will have about half the pixels visible...
+// at least better than all dark or all light
+
+function findGridWithBestContrast(){
+  const results = {};
+  
+  for(let contrast = 2; contrast <= 255; contrast+=50){
+    results[contrast] = resampleImage(contrast);
+  }
+  const targetPixelCount = (W * H) / 2;
+  let bestContrastSoFar = undefined;
+
+  Object.keys(results).forEach((contrast)=>{
+    console.log('test',contrast,results[contrast])
+    if(! bestContrastSoFar) {
+      bestContrastSoFar = contrast;
+    } else {
+      const test = results[contrast];
+      if(abs(targetPixelCount - test.pixelCount) < abs(targetPixelCount - results[bestContrastSoFar].pixelCount)){
+        bestContrastSoFar = contrast;
+      }
+    }
+    
+  });
+  //bestContrastSoFar = 202;
+  return {grid:results[bestContrastSoFar].grid, contrast:bestContrastSoFar};
+}
+
+
+function resampleImage(contrast){
+  const grid = makeUpBlankGrid();
+  let pixelCount = 0;
+  for(let x = 0; x < W; x++){
+    for(let y = 0; y < H; y++){
+      const squareBoolean = readSquare(x,y,contrast);
+
+      pixelCount += squareBoolean ? 1 : 0;
+      //console.log(squareBoolean);
+      grid[y][x] = !currentInvert ? squareBoolean: !squareBoolean ;
+    }
+  }
+  return {grid, pixelCount};
+}
+
+function readSquare(x,y,contrast){
   const squarecount = PIXW * PIXH; 
   let sum = 0;
   for(let px = x * PIXW; px < (x+1) * PIXW; px++){
@@ -541,16 +612,16 @@ function readSquare(x,y){
       sum += (r + g + b) / 3;
     }
   }
- // console.log((sum / squarecount),currentcurrentContrast,(sum / squarecount) > currentcurrentContrast);
-  return (sum / squarecount) > currentcurrentContrast;
+ // console.log((sum / squarecount),currentContrast,(sum / squarecount) > currentContrast);
+  return (sum / squarecount) > contrast;
 }
 
 function handleContrast(){
-  currentcurrentContrast = document.getElementById("contrast").value;
-  readImage();
+  currentContrast = document.getElementById("contrast").value;
+  launchReadImage(false);
 }
 
 function handleInvert(){
   currentInvert = document.getElementById("invert").checked;
-  readImage();
+  launchReadImage(false);
 }
