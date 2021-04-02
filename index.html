@@ -63,12 +63,6 @@
                     <li>share text tool, dynamic fonts
                     <li>import from source code
                     <li>description of each kernel...
-                    <li>minor tweaks:
-                    <ul>
-                        <li> make ink mode a dropdown
-                        <li> rearrange toolbar
-                        <li> hide like image import stuff
-                    </ul>
                 </ul>
                 (no promises when I'll get around to things!)
         
@@ -77,7 +71,10 @@
         </div>
         <div class="right">
 
-            <h2>tool</h2>
+            
+
+        
+        <h2>tool</h2>
             <label><input type="radio" checked  name="tool" onclick="setTool('draw')" ><span>pen</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
@@ -110,26 +107,41 @@
             <label><input id="toolpaste" type="radio" name="tool" onclick="setTool('paste')"><span>paste</span></label>
 
 
-            <h2>inkmode</h2>
-            <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
-            <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
-            <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label>
-                       
-            <h2>height</h2>
-            <input id="height" onchange="setNewHeight()"> / <span id="maxheight"></span>
-            <h2>mode/output kernel</h2>
-            <select onchange='setKernelMode(this.value);'>
-                <option value="player48color" selected>48px player color</option>
-                <option value="player48mono">48px player mono</option>
-                <option value="bbPFcolors">bB color PF</option>
-                <option value="bbPFDPCcolors">bB DPC+ color PF</option>
-            </select>
+            <br>
+            <label> 
+            <b>inkmode:</b>
+                <!-- <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
+                <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
+                <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label>                -->
+                <select onchange='setInkmode(this.value);'>
+                    <option >toggle</option>
+                    <option >draw</option>
+                    <option >erase</option>
+                </select>
+            </label>
+            <br>                                       
+            
+            <details open>
+                <summary>mode/output kernel</summary>
+                <select onchange='setKernelMode(this.value);'>
+                    <option value="player48color" selected>48px player color</option>
+                    <option value="player48mono">48px player mono</option>
+                    <option value="bbPFcolors">bB color PF</option>
+                    <option value="bbPFDPCcolors">bB DPC+ color PF</option>
+                </select>
+                <br/>
+                height: <input id="height" onchange="setNewHeight()"> / <span id="maxheight"></span>                
+                <div>
+                    <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
+                    <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download splash.asm</button>
+                </div>            
+            </details>
 
-            <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
-            <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download splash.asm</button>
+            
 
-
-            <h2>import image file</h2>
+ 
+            <details>
+                <summary>import image file</summary>
                 (Web formats (JPG, PNG, etc) supported.
                 <br>
                 All files handled locally in browser.)
@@ -139,6 +151,8 @@
                 <input type="range" id="contrast" 
                 min="0" max="255" value="128" onchange="handleContrast();"></label>
                 <label><input type="checkbox" id="invert" onchange="handleInvert();">invert</label>
+              
+            
             </details>
 
 

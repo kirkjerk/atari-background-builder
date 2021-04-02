@@ -543,7 +543,8 @@ function readImage(adjustContrast){
 
   
   if(adjustContrast) {
-    const {contrast,grid} = findGridWithBestContrast();
+    //const {contrast,grid} = findGridWithBestContrast();
+    const {contrast,grid} = findGridWithMostContrastingNeighbors();
     yxGrid = grid;
     
     document.getElementById("contrast").value = contrast;
@@ -587,6 +588,48 @@ function findGridWithBestContrast(){
   return {grid:results[bestContrastSoFar].grid, contrast:bestContrastSoFar};
 }
 
+function findGridWithMostContrastingNeighbors(){
+  const results = {};
+  
+  for(let contrast = 2; contrast <= 255; contrast+=50){
+    results[contrast] = resampleImage(contrast);
+    console.log(contrast);
+    results[contrast].neighborCount = getContrastingNeighborCount(results[contrast].grid);
+  }
+  let bestContrastSoFar = undefined;
+  Object.keys(results).forEach((contrast)=>{
+    if(! bestContrastSoFar) {
+      bestContrastSoFar = contrast;
+    } else {
+      if(results[contrast].neighborCount > results[bestContrastSoFar].neighborCount){
+        bestContrastSoFar = contrast;
+      }
+    }
+  });
+  return {grid:results[bestContrastSoFar].grid, contrast:bestContrastSoFar};
+}
+
+function getContrastingNeighborCount(grid){
+  let count = 0;
+  for(let x = 0; x < W; x++){
+    for(let y = 0; y < H; y++){
+      count += getContrastingNeighborCountForXY(grid,x,y);
+    }
+  }
+  return count;
+}
+function getContrastingNeighborCountForXY(grid,x,y){
+  const neighborDeltas = [ [-1,0],[1,0], [0,1],[0,-1]];
+  let count = 0;
+  neighborDeltas.forEach((delta)=>{
+    [nx,ny] = delta;
+    if(isInBounds(nx,ny) && grid[y][x] != grid[ny][nx] ) count++;
+  });
+  return count;
+}
+function isInBounds(x,y){
+  return (x >= 0 && x < W && y >= 0 && y < H);
+}
 
 function resampleImage(contrast){
   const grid = makeUpBlankGrid();

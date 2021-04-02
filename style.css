@@ -108,7 +108,6 @@ button {
 }
 select {
     font-size: 20px;
-    display: block;
 }
 #sectiontext,
 #sectioncolor,
@@ -121,4 +120,17 @@ select {
 
 #importmsg {
     visibility: hidden;
+}
+
+summary {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 3rem;
+}
+
+.twocol {
+    display: flex;
+}
+.twocol > div {
+    padding-right: 20px;
 }
