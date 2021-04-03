@@ -50,7 +50,9 @@ function preload(){
 
 function setup() {
   
-  setKernelMode('player48color');
+  const initalKernel = 'player48color';
+  document.getElementById('selectKernel').value = initalKernel;
+  setKernelMode(initalKernel);
   clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
   makePicker();
@@ -59,6 +61,7 @@ function setup() {
 
 
   createFileInput(loadImageFile).parent("fileButtonWrapper");
+
 
 
 }
@@ -93,7 +96,7 @@ function setKernelMode(modestring){
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
-        DOWNLOADBAS, DOWNLOADASM} = mode;
+        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT} = mode;
 
   W = ATARI_WIDTH;
   H = ATARI_STARTHEIGHT;
@@ -111,12 +114,14 @@ function setKernelMode(modestring){
 
   document.getElementById("buttonDownloadBas").style.display = DOWNLOADBAS ? 'inline-block' : 'none';
   document.getElementById("buttonDownloadAsm").style.display = DOWNLOADASM ? 'inline-block' : 'none';
+  document.getElementById("asmSupportFiles").style.display = DOWNLOADASMSUPPORT ? 'inline-block' : 'none';
+  
 
   currentKernelMode = mode;
   fillBlankColorGridWithDefault();
   
   
-  resizeCanvas(ATARI_WIDTH*SCREEN_WIDTH_PER, ATARI_MAXHEIGHT * SCREEN_HEIGHT_PER);
+  resizeCanvas(W*SCREEN_WIDTH_PER, H * SCREEN_HEIGHT_PER);
   loop();
 }
 
@@ -667,4 +672,12 @@ function handleContrast(){
 function handleInvert(){
   currentInvert = document.getElementById("invert").checked;
   launchReadImage(false);
+}
+
+
+function downloadMacro(){
+  download("macro.h",fileMACRO_H());
+}
+function downloadVCS(){
+  download("vcs.h",fileVCS_H());
 }
