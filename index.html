@@ -44,6 +44,8 @@
                 <h2>thanks</h2>
                 <ul>
                     <li>Karl Garrison for 48px kernels
+                    <li><a href="https://www.randomterrain.com/">Random Terrain</a> for the DPC+ template<br>
+
                 </ul>
                 <h2>source</h2>
                 <a href="https://github.com/kirkjerk/splash-o-matic">Fork me at github</a>.
@@ -82,19 +84,25 @@
 
         
         <h2>tool</h2>
-            <label><input type="radio" checked  name="tool" onclick="setTool('draw')" ><span>pen</span></label>
+            <label><input type="radio" checked  name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
             <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
 
             <div id="sectioncolor">
-                <label><div class="fgbg">fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
-                <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
-                <label><div class="fgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
-                <div id="colorPickerHolder"></div>
-
-                <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
-                <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
+                <div class="cols2">
+                    <div>
+                        <label><div class="fgbg"><input id="radiofg" onclick="setFGvsBG('fg');" type="radio" name="dofgbg" checked>fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
+                        <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
+                        <div id="colorPickerHolder_fg"></div>
+                        <label><div class="fgbg"><input id="radiobg" onclick="setFGvsBG('bg');" type="radio" name="dofgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
+                        <div id="colorPickerHolder_bg"></div>
+                    </div>
+                    <div id="ntscpalzone">
+                        <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
+                        <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
+                    </div>
+                </div>
             </div>
 
 

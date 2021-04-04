@@ -41,6 +41,7 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 4,
       MULTICOLOR: true,
+      MULTICOLORBG: true,
       DOWNLOADBAS: ()=>{download("splash.bas",codeBBpfDPC());},
     },
 

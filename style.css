@@ -88,9 +88,8 @@ input.error {
 }
 
 .fgbg {
-    width: 1.6em;
+    width: 3em;
     display: inline-block;
-    text-align: right;
 }
 .colorHolder {
     display: inline-block;
@@ -116,6 +115,10 @@ select {
     margin-left: 20px;
     background-color: #555;
     padding: 4px;
+}
+.cols2 {
+    display: flex;
+    justify-content: space-around;
 }
 
 #importmsg {

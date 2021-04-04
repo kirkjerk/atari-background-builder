@@ -26,6 +26,7 @@ let currentUploadedImage;
 let currentShowingUploadedImage;
 let currentContrast = 128;
 let currentInvert = false;
+let currentFGBG = 'fg';
 
 
 
@@ -37,6 +38,7 @@ let PIXH;
 
 let yxGrid = Array();
 let colorGrid = Array();
+let colorBgGrid = Array();
 
 
 let sx,sy,ex,ey;
@@ -50,12 +52,12 @@ function preload(){
 
 function setup() {
   
-  const initalKernel = 'player48color';
+  const initalKernel = 'bbPFDPCcolors';  // 'player48color'
   document.getElementById('selectKernel').value = initalKernel;
   setKernelMode(initalKernel);
   clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
-  makePicker();
+  //makePicker();
   setFont('tiny3ishx4');
   //document.getElementById("picktext").click();
 
@@ -96,7 +98,7 @@ function setKernelMode(modestring){
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
-        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT} = mode;
+        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT, MULTICOLORBG} = mode;
 
   W = ATARI_WIDTH;
   H = ATARI_STARTHEIGHT;
@@ -107,15 +109,13 @@ function setKernelMode(modestring){
   
   document.getElementById("info").style.width = `${W*PIXW}px`;
 
-  const colorToolElem = document.getElementById('colortool');
-  colorToolElem.style.display = mode.MULTICOLOR ? 'block':'none';
-  const colorPickShowElem = document.getElementById('hovercolorlabel');
-  colorPickShowElem.style.display = mode.MULTICOLOR ? 'block':'none';
-
   document.getElementById("buttonDownloadBas").style.display = DOWNLOADBAS ? 'inline-block' : 'none';
   document.getElementById("buttonDownloadAsm").style.display = DOWNLOADASM ? 'inline-block' : 'none';
   document.getElementById("asmSupportFiles").style.display = DOWNLOADASMSUPPORT ? 'inline-block' : 'none';
   
+  document.getElementById("radiofg").style.visibility = MULTICOLORBG ? 'visible' : 'hidden';
+  document.getElementById("radiobg").style.visibility = MULTICOLORBG ? 'visible' : 'hidden';
+
 
   currentKernelMode = mode;
   fillBlankColorGridWithDefault();
@@ -133,6 +133,13 @@ function fillBlankColorGridWithDefault(){
       }
     }
   }
+  if(currentKernelMode.MULTICOLORBG){
+    for(let y = 0; y < H; y++){
+      if(! colorBgGrid[y]){
+        colorBgGrid[y] = currentBGColor;
+      }
+    }
+  }
 }
 
 function getColorForRow(y,half){
@@ -141,6 +148,14 @@ function getColorForRow(y,half){
     return `#${HUELUM2HEX[currentTVMode][currentFGColor]}${alpha}`;
   } else {
     return `#${HUELUM2HEX[currentTVMode][colorGrid[y]]}${alpha}`;
+  }
+}
+function getBgColorForRow(y){
+  if(! currentKernelMode.MULTICOLORBG || ! colorBgGrid[y]) {
+    return `#${HUELUM2HEX[currentTVMode][currentBGColor]}`;
+  } else {
+    //console.log(colorBgGrid[y], );
+    return `#${HUELUM2HEX[currentTVMode][colorBgGrid[y]]}`;
   }
 }
 
@@ -152,8 +167,15 @@ function draw() {
   if(currentShowingUploadedImage){
       image(currentShowingUploadedImage, 0, 0, width, height);
   }
-  
+
   noStroke();
+
+  if(currentKernelMode.MULTICOLORBG){
+    for (let y = 0; y < H; y++) {
+      fill(getBgColorForRow(y));
+      rect(0,y * PIXH, width, PIXH)
+    }
+  }
 
 const horizgapsize = currentKernelMode.HORIZGAP ? 2 : 0
 for (let x = 0; x < W; x++) {
@@ -161,7 +183,6 @@ for (let x = 0; x < W; x++) {
     fill(getColorForRow(y));
     if (yxGrid[y][x]) rect(x * PIXW, y * PIXH, PIXW, PIXH-horizgapsize);
   }
-
 }
 
 
@@ -188,7 +209,7 @@ if(currentKernelMode.MULTICOLOR && ! currentShowingUploadedImage){
   for(let y = 0; y < H; y++){
     noStroke();
     fill(getColorForRow(y));
-    rect(0,y * PIXH,PIXW/4,PIXH);
+    rect(width - PIXW/4,y * PIXH,PIXW/4,PIXH);
   }
 } 
 
@@ -274,10 +295,7 @@ function setNewHeight(){
   const elem = document.getElementById('height');
   const newHeight = parseInt(elem.value);
   
-
   elem.classList.remove("error");
-
-  
 
   if(isNaN(newHeight) || newHeight < 0 || newHeight > currentKernelMode.ATARI_MAXHEIGHT){
     elem.classList.add("error");
@@ -313,14 +331,13 @@ function download(filename, text) {
 }
 
 
-function makePicker(){
+function makePicker(which){
   
-  const parentElem = document.getElementById('colorPickerHolder');
+  const parentElem = document.getElementById(`colorPickerHolder_${which}`);
 
   const table = document.createElement("table");
   table.classList.add("colorpick");
-  table.setAttribute("id","colorTable");
-  table.style.visibility = "hidden";
+
   
   table.innerHTML = '<tr><td  colspan="8" onclick="closeAtariColorPicker()">X</td></tr>';
 
@@ -347,6 +364,10 @@ function makePicker(){
   parentElem.appendChild(table);
   
 }
+function removePicker(which){
+  const parentElem = document.getElementById(`colorPickerHolder_${which}`);
+  parentElem.innerHTML = '';
+}
 
 function textClassForHexBg(hexColor){
   const{r,g,b} = hexToRgb(hexColor);
@@ -366,28 +387,26 @@ function hexToRgb(hex) {
 
 
 function openAtariColorPicker(which){
+  if(currentColorPickerTarget) removePicker(currentColorPickerTarget);
   currentColorPickerTarget = which;
-  document.getElementById('colorTable').style.visibility = "visible";
+  makePicker(currentColorPickerTarget);
 }
 function closeAtariColorPicker(){
-  document.getElementById('colorTable').style.visibility = "hidden";
+  removePicker(currentColorPickerTarget);
 }
 function clickAtariColor(atariKey){
-  document.getElementById('colorTable').style.visibility = "hidden";
-  if(currentColorPickerTarget == 'fg') {
-    setFGColor(atariKey);
-    if(currentKernelMode.MULTICOLOR) {
-      document.getElementById("colortool").click();
-    }
-  }
+  if(currentColorPickerTarget == 'fg') setFGColor(atariKey);
   if(currentColorPickerTarget == 'bg') setBGColor(atariKey);
-  
+  closeAtariColorPicker();
+  if(!currentKernelMode.MULTICOLOR && currentColorPickerTarget == 'fg'){
+    document.getElementById("drawtoolradio").click(); //automatically start drawing if mono...
+  }
 }
 
 
 function setTVMode(mode){
   currentTVMode = mode;
-  makePicker();
+  //makePicker();
   useCurrentFGColor();
   useCurrentBGColor();
 }
@@ -398,6 +417,10 @@ function setFGColor(atariKey){
 function setBGColor(atariKey){
   currentBGColor = atariKey;
   useCurrentBGColor();
+}
+
+function setFGvsBG(which){
+  currentFGBG = which;
 }
 
 

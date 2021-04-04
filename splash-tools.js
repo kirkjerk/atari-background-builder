@@ -12,7 +12,10 @@ function setInColorGrid(gridY,value){
     if(gridY < 0 || gridY >= H) return;
     colorGrid[gridY] = value;
 }
-
+function setInColorBgGrid(gridY,value){
+  if(gridY < 0 || gridY >= H) return;
+  colorBgGrid[gridY] = value;
+}
 
 const toolFunctions = {
     draw: {
@@ -22,7 +25,7 @@ const toolFunctions = {
       mouseMoved: ()=>{},
       mouseDragged: (sx,sy,ex,ey) => {
         const spots = getAllSpotsBetween(sx,sy,ex,ey); 
-        console.log(spots.length, JSON.stringify(spots));
+        //console.log(spots.length, JSON.stringify(spots));
         spots.map((spot)=>{
           setInYXGrid(spot.x,spot.y,currentInkBoolean);
         });
@@ -41,9 +44,15 @@ const toolFunctions = {
       mouseMoved: ()=>{},
       mouseDragged: (sx,sy,ex,ey) => {
         const spots = getAllSpotsBetween(sx,sy,ex,ey); 
-        spots.map((spot)=>{
-            setInColorGrid(spot.y, currentFGColor); 
-        });
+        if((!currentKernelMode.MULTICOLORBG) || currentFGBG == 'fg'){
+          spots.map((spot)=>{
+              setInColorGrid(spot.y, currentFGColor); 
+          });
+        } else {
+          spots.map((spot)=>{
+            setInColorBgGrid(spot.y, currentBGColor); 
+          });
+        }
       },
       mouseReleased:() => {},
       showHotSpots: () => false,

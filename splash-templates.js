@@ -389,7 +389,7 @@ ${colorblock}
 }
 function codeBBpfColors() {
    const pixelblock = getBBPixelBlock();
-   const colorblock = getBBColorBlock();
+   const colorblock = getBBColorBlock(colorGrid);
 
    return `    set kernel_options pfcolors 
 startLoop
@@ -410,8 +410,8 @@ ${colorblock}end
 
 function codeBBpfDPC(){
    const pixelblock = getBBPixelBlock();
-   const colorblock = getBBColorBlock();
-
+   const colorblock = getBBColorBlock(colorGrid);
+   const bkcolor = getBBColorBlock(colorBgGrid);
    return `   set kernel DPC+
 
    
@@ -443,8 +443,12 @@ __Start_Restart
      pfcolors:
    ${colorblock}end
 
-
-
+   ;***************************************************************
+   ;
+   ;  Background colors.
+   ;
+   bkcolors:
+${bkcolor}end
 
    ;************************************************************
    _Bit0_Reset_Restrainer{0} = 1
@@ -507,11 +511,11 @@ function getBBPixelBlock() {
    }
    return pixelblock;
 }
-function getBBColorBlock(){
+function getBBColorBlock(grid){
    let colorblock = '';
 
    for(let y = 0; y < H; y++){
-      colorblock += `   $${colorGrid[y]}\n`
+      colorblock += `   $${grid[y]}\n`
    } 
    return colorblock;
 }
