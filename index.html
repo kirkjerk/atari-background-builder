@@ -31,7 +31,7 @@
             <div id="info">
                 <h2>what is this?</h2>
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
-                <p>It can generate sample code for 48px sprite-based or various PlayField images. You can even import a PNG or JPG and it will do its best
+                <p>It can generate sample code for <b>48px sprite-based</b> or <b>various Playfield</b> images. You can even import a PNG or JPG and it will do its best
                     to show you a monochrome version you can then re-color as needed.
                 </p>
                 <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
@@ -58,6 +58,7 @@
                 
                 <ul>
                     <li>description/notes of each kernel...
+                    <li>save/restore to local storage??
                     <li>more fonts
                     <li>undo
                     <li>local storage for drafts (or explicit save/new?)
@@ -66,6 +67,9 @@
                     <li>share text tool, dynamic fonts
                     <li>import from source code
                     <li>pass globals into kernel functions
+                    <li>gradient tool
+                    <li>bug: clicks outside box w/ color tool
+                    <li>should kernels allow color changes indpendent of scanlines per pixel?   
                     
                 </ul>
                 (no promises when I'll get around to things!)
@@ -135,7 +139,8 @@
                     <option value="AssymPF1Scanline">ASM Assymetrical color (1 line)</option>
                 </select>
                 <br/>
-                height: <input id="height" onchange="setNewHeight()"> / <span id="maxheight"></span>                
+                height: <input id="height"> / <span id="maxheight"></span> 
+                <button onclick="setNewHeight()">update</button>               
                 <div>
                     <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
                     <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download splash.asm</button>

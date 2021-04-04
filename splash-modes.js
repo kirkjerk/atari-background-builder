@@ -46,8 +46,8 @@ const modes = {
 
     AssymPF1Scanline: {
       ATARI_WIDTH: 40,
-      ATARI_MAXHEIGHT: 192,
-      ATARI_STARTHEIGHT:192,
+      ATARI_MAXHEIGHT: 110,
+      ATARI_STARTHEIGHT:110,
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,

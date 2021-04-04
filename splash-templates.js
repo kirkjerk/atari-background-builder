@@ -35,27 +35,6 @@ SubMainLoop
 
 }
 
-function getByteBuff(line, place){
-   let buf = '	BYTE %';
-   for(let x = place * 8; x < (place + 1) * 8; x++) {
-      buf += line[x] ? '1' : '0';
-   }
-   buf += '\n';
-   return buf;   
-}
-
-function make48pxblocks(){
-	//we have 6 blocks, one for each section...	
-	const block = ['','','','','',''];
-
-	for(let y = H - 1; y >= 0; y--){
-	   
-	   for(let p = 0; p < 6; p++){
-		  block[p] += getByteBuff(yxGrid[y], p);
-	   }
-	}
-	return block;
-}
 
 
 function code48pxMonoASM(){
@@ -226,13 +205,7 @@ ${block[5]}
 
 
 
-function makeColorBytes(){
-   let colorblock = '';
-   for(let y = H-1; y >= 0; y--){
-      colorblock += `   .byte $${colorGrid[y]}\n`
-   }
-   return colorblock;
-}
+
 
 
 function code48pxColorASM(){
@@ -544,12 +517,71 @@ function getBBColorBlock(){
 }
 
 
+function makeColorBytes(){ //reverse order
+   let colorblock = '';
+   for(let y = H-1; y >= 0; y--){
+      colorblock += `   .byte $${colorGrid[y]}\n`
+   }
+   return colorblock;
+}
+
+
+function getByteBuff(line, start,length,prefix,on,off){
+   let buf = prefix;
+   const increment = length / abs(length); //i.e. 1 or -1
+
+
+   let x = start;
+   for(let c = 0; c < abs(length); c++) {
+      console.log(`look at ${x}`);
+      buf += line[x] ? on:off;
+      x += increment;
+   }
+   if(abs(length) < 8) { //pad with zeros
+      buf += '0'.repeat(8 - abs(length));
+   }
+   buf += '\n';
+   return buf;   
+}
+
+function make48pxblocks(){
+	//we have 6 blocks, one for each section...	
+	const block = ['','','','','',''];
+	for(let y = H - 1; y >= 0; y--){
+	   for(let p = 0; p < 6; p++){
+		  block[p] += getByteBuff(yxGrid[y], p*8,8,'	BYTE %','1','0');
+	   }
+	}
+	return block;
+}
+
+// get the bits from start to stop, INCLUSIVE
+//if start is bigger than stop, will be in reverse order
+//if less than 8 will be right padded with 0s
+function makeColumnBlock(start, stop){
+   const length = (stop - start) - ((start > stop) ? 1 : -1);
+   console.log({start,stop,length});
+   let buf = '';
+   for(let y = H - 1; y >= 0; y--){
+      buf += getByteBuff(yxGrid[y], start,length,'	.byte %','1','0');
+   }
+   return buf;
+}
+
 function codeASMpfAssymRepeated(scanline){
+   const PFColors = makeColorBytes();
+   const PF0DataA = makeColumnBlock(3,0);
+   const PF1DataA = makeColumnBlock(4,11);
+   const PF2DataA = makeColumnBlock(19,12);
+   const PF0DataB = makeColumnBlock(23,20);
+   const PF1DataB = makeColumnBlock(24,31);
+   const PF2DataB = makeColumnBlock(39,32);
+
    return `    processor 6502
-   include "vcs.h"
-   include "macro.h"
-   SEG.U VARS
-   ORG $80
+    include "vcs.h"
+    include "macro.h"
+    SEG.U VARS
+    ORG $80
 
 ; $80
 Temp                        ds 1
@@ -557,8 +589,8 @@ PlayFieldHeightCounter      ds 1
 PlayFieldLinesCounter       ds 1
 
 kernel_lines=192
-playfield_lines=44
-playfield_line_height=4
+playfield_lines=${H}
+playfield_line_height=1
 padding_lines=10
 
 playfield_scanlines=#playfield_lines*#playfield_line_height
@@ -568,10 +600,10 @@ remaining_lines=#kernel_lines-#playfield_scanlines-#padding_lines-2
 NO_ILLEGAL_OPCODES = 0
 
 
-  SEG CODE
-  ORG $F000
+   SEG CODE
+   ORG $F000
 Start:
-  CLEAN_START
+   CLEAN_START
 
 ; Repeating playfield is default with clean start
 ;   lda #1
@@ -579,148 +611,157 @@ Start:
 
 NextFrame
 
-  VERTICAL_SYNC
-   lda #44
-   sta TIM64T
+	VERTICAL_SYNC
+    lda #44
+    sta TIM64T
 
 ; My VBLANK code
 
 
-   
-   
+    
+    
 WaitVBlank
-   lda INTIM
-   bne WaitVBlank ; loop until timer expires
-   sta WSYNC
-   sta VBLANK
+    lda INTIM
+    bne WaitVBlank ; loop until timer expires
+    sta WSYNC
+    sta VBLANK
 
-   ldx #padding_lines
+    ldx #padding_lines
 PaddingLoop
-   sta WSYNC
-   dex
-   bne PaddingLoop
+    sta WSYNC
+    dex
+    bne PaddingLoop
 
-   ldx #playfield_lines-1
-   lda #playfield_line_height
-   sta PlayFieldHeightCounter
+    ldx #playfield_lines
+    lda #playfield_line_height
+    sta PlayFieldHeightCounter
 
 
 PlayfieldLoop
-   sta WSYNC                       ; 3     (0)
-   lda PFColors,x                  ; 4     (4)
-   sta COLUPF                      ; 3     (7)
-   lda PF0DataA,x                  ; 4     (11)
-   sta PF0                         ; 3     (14)
-   lda PF1DataA,x                  ; 4     (18)
-   sta PF1                         ; 3     (21)
-   lda PF2DataA,x                  ; 4     (25*)
-   sta PF2                         ; 3     (28)
-   lda PF0DataB,x                  ; 4     (32)
-   tay                             ; 2     (34)
-   lda PF1DataB,x                  ; 4     (38)
-   sta PF1                         ; 3     (41)
-   lda PF2DataB,x                  ; 4     (45)
-   sty PF0                         ; 3     (48)
-   sta PF2                         ; 3     (51)
-   dec PlayFieldHeightCounter      ; 5     (56)
-   bne ____skip_new_row            ; 2/3   (58/59)
-   lda #playfield_line_height      ; 2     (60)
-   sta PlayFieldHeightCounter      ; 3     (63)
-   dex                             ; 2     (65)
-   bmi ____done_playfield_rows     ; 2/3   (67)
+    sta WSYNC                       ; 3     (0)
+    lda PFColors-1,x                  ; 4     (4)
+    sta COLUPF                      ; 3     (7)
+    lda PF0DataA-1,x                  ; 4     (11)
+    sta PF0                         ; 3     (14)
+    lda PF1DataA-1,x                  ; 4     (18)
+    sta PF1                         ; 3     (21)
+    lda PF2DataA-1,x                  ; 4     (25*)
+    sta PF2                         ; 3     (28)
+    lda PF0DataB-1,x                  ; 4     (32)
+    tay                             ; 2     (34)
+    lda PF1DataB-1,x                  ; 4     (38)
+    sta PF1                         ; 3     (41)
+    lda PF2DataB-1,x                  ; 4     (45)
+    sty PF0                         ; 3     (48)
+    sta PF2                         ; 3     (51)
+    dec PlayFieldHeightCounter      ; 5     (56)
+    bne ____skip_new_row            ; 2/3   (58/59)
+    lda #playfield_line_height      ; 2     (60)
+    sta PlayFieldHeightCounter      ; 3     (63)
+    dex                             ; 2     (65)
+    beq ____done_playfield_rows     ; 2/3   (67)
 ____skip_new_row
-   jmp PlayfieldLoop               ; 3     (70)
+    jmp PlayfieldLoop               ; 3     (70)
 
 
 
 ____done_playfield_rows
-   lda #0
-   sta PF0
-   sta PF1
-   sta PF2
-   ldx #remaining_lines
+    lda #0
+    sta PF0
+    sta PF1
+    sta PF2
+    ldx #remaining_lines
 VisibleScreen
-   sta WSYNC
-   dex
-   bne VisibleScreen
-   
+    sta WSYNC
+    dex
+    bne VisibleScreen
+    
 SetupOS
-   lda #36
-   sta TIM64T
-   lda #2
-   sta WSYNC
-   sta VBLANK
+    lda #36
+    sta TIM64T
+    lda #2
+    sta WSYNC
+    sta VBLANK
 
 
 
-           
+            
 WaitOverscan
-   lda INTIM
-   bne WaitOverscan
-   sta WSYNC
-   
-   jmp NextFrame
+    lda INTIM
+    bne WaitOverscan
+    sta WSYNC
+    
+    jmp NextFrame
 
-  if >. != >[.+(playfield_lines)]
-     align 256
-  endif
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF0DataA
+${PF0DataA}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF1DataA
+${PF1DataA}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF2DataA
+${PF2DataA}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF0DataB
+${PF0DataB}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF1DataB
+${PF1DataB}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PF2DataB
+${PF2DataB}
+
+   if >. != >[.+(playfield_lines)]
+      align 256
+   endif
+
+PFColors
+${PFColors}
 
 
-  PF0DataA
-  ${pf0dataa}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PF1DataA
-  ${pf1dataa}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PF2DataA
-  ${pf2dataa}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PF0DataB
-  ${pf0datab}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PF1DataB
-  ${pf1datab}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PF2DataB
-  ${pf2datab}
-  
-     if >. != >[.+(playfield_lines)]
-        align 256
-     endif
-  
-  PFColors
-  ${pfcolors}
-  
+    ECHO ([$FFFC-.]d), "bytes free"
 
-   ECHO ([$FFFC-.]d), "bytes free"
+    org $fffc
+    .word Start
+    .word Start
 
-   org $fffc
-   .word Start
-   .word Start
-
-   `;
+`;
 
 }
+
+
+
+
+/**
+ * 
+ * STANDARD .H FILES PUT HERE FOR CONVENIENCE
+ * 
+ * 
+ * */
 
 
 

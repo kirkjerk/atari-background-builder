@@ -272,7 +272,7 @@ function setInkmode(what){
 
 function setNewHeight(){
   const elem = document.getElementById('height');
-  const newHeight = elem.value;
+  const newHeight = parseInt(elem.value);
   
 
   elem.classList.remove("error");

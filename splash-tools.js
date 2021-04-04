@@ -22,6 +22,7 @@ const toolFunctions = {
       mouseMoved: ()=>{},
       mouseDragged: (sx,sy,ex,ey) => {
         const spots = getAllSpotsBetween(sx,sy,ex,ey); 
+        console.log(spots.length, JSON.stringify(spots));
         spots.map((spot)=>{
           setInYXGrid(spot.x,spot.y,currentInkBoolean);
         });
@@ -178,9 +179,7 @@ function getAllRectSpotsBetween(sx,sy,ex,ey){
         const x = int(tx / PIXW);
         const y = int(ty / PIXH);
         if(x >= 0 && x < W && y >= 0 && y < H) {
-            if(x >= 0 && x < W && y >= 0 && y < H) {
-              spots[`${x}:${y}`] = true;
-            }
+            spots[`${x}:${y}`] = true;
         }
       } 
       
