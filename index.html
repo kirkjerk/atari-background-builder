@@ -65,12 +65,13 @@
                     <li>undo
                     <li>local storage for drafts (or explicit save/new?)
                     <li>new kernel modes: Assembly PFs, others?
-                    <li>add background (not just PF) colors to DPC+ mode
                     <li>share text tool, dynamic fonts
                     <li>import from source code
                     <li>pass globals into kernel functions
                     <li>gradient tool
+                    <li>eyedropper (mini tool?)
                     <li>should kernels allow color changes indpendent of scanlines per pixel?   
+                    
                     
                 </ul>
                 (no promises when I'll get around to things!)
@@ -84,6 +85,7 @@
 
         
         <h2>tool</h2>
+        <div class="tools">
             <label><input type="radio" checked  name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
@@ -92,11 +94,29 @@
             <div id="sectioncolor">
                 <div class="cols2">
                     <div>
-                        <label><div class="fgbg"><input id="radiofg" onclick="setFGvsBG('fg');" type="radio" name="dofgbg" checked>fg:</div><div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div><button onclick="openAtariColorPicker('fg')">pick</button></label>
-                        <label id="hovercolorlabel" class="mini">over: <span id="hovercolor">0E</span></label>
+                        <div class="fgbg">
+                            <input id="radiofg" onclick="setFGvsBG('fg');" type="radio" name="dofgbg" checked>
+                            <label onclick="openAtariColorPicker('fg')">
+                                <span class='fauxlink'>FG:</span>
+                                <div  style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div>
+                            </label>
+                        </div>
                         <div id="colorPickerHolder_fg"></div>
-                        <label><div class="fgbg"><input id="radiobg" onclick="setFGvsBG('bg');" type="radio" name="dofgbg">bg:</div><div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div><button onclick="openAtariColorPicker('bg')">pick</button></label>
+                        
+                        
+                        
+                        <div class="fgbg">
+                            <input id="radiobg" onclick="setFGvsBG('bg');" type="radio" name="dofgbg">
+                            <label onclick="openAtariColorPicker('bg')">
+                                <span class='fauxlink'>BG:</span>
+                                <div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div>
+                            </label>
+                        </div>
+                    
                         <div id="colorPickerHolder_bg"></div>
+                        
+                        
+                        <div style='text-align:right;'><button onclick="startEyedrop()">eyedropper</button></div>
                     </div>
                     <div id="ntscpalzone">
                         <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
@@ -121,8 +141,8 @@
             </div>
             <label><input id="toolpaste" type="radio" name="tool" onclick="setTool('paste')"><span>paste</span></label>
 
+        </div>
 
-            <br>
             <label> 
             <b>inkmode:</b>
                 <!-- <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>

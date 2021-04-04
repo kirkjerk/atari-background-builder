@@ -27,7 +27,7 @@ let currentShowingUploadedImage;
 let currentContrast = 128;
 let currentInvert = false;
 let currentFGBG = 'fg';
-
+let currentEyedrop = false;
 
 
 let W;
@@ -52,9 +52,10 @@ function preload(){
 
 function setup() {
   
-  const initalKernel = 'bbPFDPCcolors';  // 'player48color'
+  const initalKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors'
   document.getElementById('selectKernel').value = initalKernel;
   setKernelMode(initalKernel);
+  setTool('draw'); //draw
   clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
   //makePicker();
@@ -218,11 +219,7 @@ noLoop();
 
 }
 
-function showHoverColor(){
-  const gridY = int(mouseY / PIXH);
-  const color = colorGrid[gridY];
-  document.getElementById("hovercolor").innerHTML = color?color:'';
-}
+
 
 
 
@@ -247,12 +244,10 @@ function mouseDragged() {
   const ey = mouseY;
 
   currentToolFunctions.mouseDragged(sx,sy,ex,ey);
-  showHoverColor();
   loop();
 }
 
 function mouseMoved(){
-  showHoverColor();
   const gridX = int(mouseX / PIXW);
   const gridY = int(mouseY / PIXH);
   currentToolFunctions.mouseMoved(gridX,gridY);
@@ -272,6 +267,14 @@ const toolsWithSections = ["text","color","select"];
 function setTool(what){
   currentTool = what;   
   currentToolFunctions = toolFunctions[what];
+
+  stopEyedrop();
+
+  cursor(ARROW);
+
+  if(currentToolFunctions.cursor){
+    cursor(currentToolFunctions.cursor);
+  }
 
   toolsWithSections.forEach((tool) => {
     document.getElementById(`section${tool}`).style.display = 'none';
@@ -703,4 +706,14 @@ function downloadMacro(){
 }
 function downloadVCS(){
   download("vcs.h",fileVCS_H());
+}
+
+
+function startEyedrop(){
+  currentEyedrop = true;
+  cursor(CROSS); 
+}
+function stopEyedrop(){
+  currentEyedrop = false;
+  cursor(ARROW);
 }

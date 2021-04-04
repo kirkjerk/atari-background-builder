@@ -22,8 +22,10 @@ a {
     justify-content: center;
     padding-top: 60px;
 }
-#mainwrapper label {
-    display: block;
+
+.tools {
+    display: flex;
+    flex-direction: column;
 }
 
 #mainwrapper .left {
@@ -88,8 +90,8 @@ input.error {
 }
 
 .fgbg {
-    width: 3em;
     display: inline-block;
+    cursor: pointer;
 }
 .colorHolder {
     display: inline-block;
@@ -136,4 +138,7 @@ summary {
 }
 .twocol > div {
     padding-right: 20px;
+}
+.fauxlink {
+    text-decoration: underline;
 }

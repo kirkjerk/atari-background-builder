@@ -37,8 +37,17 @@ const toolFunctions = {
   
     color: {
       mousePressed: (gridX,gridY) => {
-        if(inBoundsAtariPixels(gridX,gridY)) {
-          colorGrid[gridY] = currentFGColor;
+        if(!currentEyedrop){
+          if(inBoundsAtariPixels(gridX,gridY)) {
+            colorGrid[gridY] = currentFGColor;
+          }
+        } else {
+          if(! currentKernelMode.MULTICOLORBG || currentFGBG == 'fg'){
+            setFGColor(colorGrid[gridY]);
+          } else {
+            setBGColor(colorBgGrid[gridY]);
+          }
+          stopEyedrop();
         }
       },
       mouseMoved: ()=>{},
