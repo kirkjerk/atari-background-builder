@@ -34,7 +34,9 @@ const toolFunctions = {
   
     color: {
       mousePressed: (gridX,gridY) => {
-        colorGrid[gridY] = currentFGColor;
+        if(inBoundsAtariPixels(gridX,gridY)) {
+          colorGrid[gridY] = currentFGColor;
+        }
       },
       mouseMoved: ()=>{},
       mouseDragged: (sx,sy,ex,ey) => {
@@ -147,7 +149,9 @@ const toolFunctions = {
 
 
 
-
+function inBoundsAtariPixels(x,y){
+  return x >= 0 && x < W && y >= 0 && y < H;
+}
 
 
 //take the mouse x,y for start and end,
@@ -178,7 +182,7 @@ function getAllRectSpotsBetween(sx,sy,ex,ey){
         const ty = map(i,1,quantize,sy,ey);
         const x = int(tx / PIXW);
         const y = int(ty / PIXH);
-        if(x >= 0 && x < W && y >= 0 && y < H) {
+        if(inBoundsAtariPixels(x,y)){
             spots[`${x}:${y}`] = true;
         }
       } 
