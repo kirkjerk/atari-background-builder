@@ -71,7 +71,7 @@
                     <li>gradient tool
                     <li>eyedropper (mini tool?)
                     <li>should kernels allow color changes indpendent of scanlines per pixel?   
-                    
+                    <li>BUG: image loading straight into DPC+ broken?
                     
                 </ul>
                 (no promises when I'll get around to things!)
@@ -86,7 +86,7 @@
         
         <h2>tool</h2>
         <div class="tools">
-            <label><input type="radio" checked  name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
+            <label id="drawtool"><input type="radio" checked  name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
             <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
             <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
@@ -124,8 +124,67 @@
                     </div>
                 </div>
             </div>
+            <label id="gradianttool"><input type="radio"  name="tool" onclick="setTool('gradiant')" ><span>gradiant</span></label>
 
+            <div id="sectiongradiant">
 
+                <table class="gradtable">
+                    <tr>
+                        <td colspan="16" onclick="openGradiantAtariColorPicker('start')"><span class='fauxlink'>start</span></td>
+                        <td align="right" colspan="16" onclick="openGradiantAtariColorPicker('stop')"><span class='fauxlink'>end</span></td>
+                    </tr>
+                        
+                    <tr class="gradrow">
+                        <td class="full" onclick="openGradiantAtariColorPicker('start')">
+                            <div style="background-color:#000;" class="colorHolder light" id='currentGradStart'>00</div>
+                        </td>
+                        <td id="grad0"></td>
+                        <td id="grad1"></td>
+                        <td id="grad2"></td>
+                        <td id="grad3"></td>
+                        <td id="grad4"></td>
+                        <td id="grad5"></td>
+                        <td id="grad6"></td>
+                        <td id="grad7"></td>
+                        <td id="grad8"></td>
+                        <td id="grad9"></td>
+                        <td id="grad10"></td>
+                        <td id="grad11"></td>
+                        <td id="grad12"></td>
+                        <td id="grad13"></td>
+                        <td id="grad14"></td>
+                        <td id="grad15"></td>
+                        <td id="grad16"></td>
+                        <td id="grad17"></td>
+                        <td id="grad18"></td>
+                        <td id="grad19"></td>
+                        <td id="grad20"></td>
+                        <td id="grad21"></td>
+                        <td id="grad22"></td>
+                        <td id="grad23"></td>
+                        <td id="grad24"></td>
+                        <td id="grad25"></td>
+                        <td id="grad26"></td>
+                        <td id="grad27"></td>
+                        <td id="grad28"></td>
+                        <td id="grad29"></td>
+                        
+                        <td class="full" onclick="openGradiantAtariColorPicker('stop');">
+                            <div  style="background-color:#ECECEC;" class="colorHolder dark" id='currentGradStop'>0E</div>
+                        </td>
+                    </tr>
+                </table>
+                    <div id="gradiantFGBG">
+                        <label><input onclick="setCurrentGradFGBG('fg');" name="gradiantFGBG" type="radio" checked>FG</label>
+                        <label><input onclick="setCurrentGradFGBG('bg');"  name="gradiantFGBG" type="radio">BG</label>
+                    </div>
+            </div>
+
+            <div id="colorPickerHolder_gradfgstart"></div>
+            <div id="colorPickerHolder_gradfgstop"></div>
+            <div id="colorPickerHolder_gradbgstart"></div>
+            <div id="colorPickerHolder_gradbgstop"></div>
+            
             <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')" ><span>text</span></label>
             <div id="sectiontext">
                 <input id="text" placeholder="Your Text Here" 

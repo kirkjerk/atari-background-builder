@@ -67,7 +67,80 @@ const toolFunctions = {
       showHotSpots: () => false,
       showHover: () => true
     },
-  
+    gradiant: {
+      mousePressed: (gridX,gridY) => {
+        if(!inBoundsAtariPixels(gridX,gridY)) {
+          currentHotSpots = [];
+          return;
+        }
+        currentStartMouseX = mouseX;
+        currentStartMouseY = mouseY;
+      },
+      mouseMoved: ()=>{},
+      mouseDragged: (sx,sy,ex,ey) => {
+        const gridSX = int(sx / PIXW);
+        const gridSY = int(sy / PIXH);
+        const gridEX = int(ex / PIXW);
+        const gridEY = int(ey / PIXH);
+        if(inBoundsAtariPixels(gridSX,gridSY) && inBoundsAtariPixels(gridEX,gridEY)) {
+          currentHotSpots = getAllSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
+        }
+      },
+      mouseReleased:() => {
+        const mapYs = {};
+        const uniqueSpotYs = [];
+        console.log({currentHotSpots});
+        if(currentHotSpots.length == 0) return;
+        currentHotSpots.forEach((spot)=>{
+          if(! mapYs[spot.y]){
+            mapYs[spot.y] = spot;
+            uniqueSpotYs.push(spot.y);
+          } 
+        });
+        const spotcount = uniqueSpotYs.length - 1; //make it inclusive of endpoints for mapping
+        uniqueSpotYs.forEach((y,i)=>{
+          
+          const currentStartColorHex = currentGradFGBG ? currentGradFGStart : currentGradBGStart;
+          const currentStopColorHex = currentGradFGBG ? currentGradFGStop : currentGradBGStop;
+          const currentStartColorVal = parseInt(currentStartColorHex, 16);
+          const currentStopColorVal = parseInt(currentStopColorHex, 16);
+          
+          //round number to 2...
+          const newColorValueInt = (parseInt(map(i/spotcount,0,1.0,currentStartColorVal,currentStopColorVal)/2)*2);
+          //uppser case,make two digits, prepadded  with 0
+          const newColorValueHex = ('00'+newColorValueInt.toString(16).toUpperCase()).slice(-2);
+          console.log(newColorValueInt,newColorValueHex);
+          console.log(currentGradFGBG);
+          if((!currentKernelMode.MULTICOLORBG) || currentGradFGBG == 'fg'){
+            setInColorGrid(y, newColorValueHex); 
+          } else {
+            setInColorBgGrid(y, newColorValueHex); 
+          }
+        });
+        console.log(colorGrid); 
+        console.log(colorBgGrid); 
+        
+/*
+        if((!currentKernelMode.MULTICOLORBG) || currentFGradaintGBG == 'fg'){
+          spots.map((spot)=>{
+              setInColorGrid(spot.y, currentFGColor); 
+              console.log(spot.y);
+          });
+        } else {
+          spots.map((spot)=>{
+            setInColorBgGrid(spot.y, currentBGColor); 
+          });
+        }*/
+        //console.log(uniqueSpotYs);
+
+
+
+      },
+      showHotSpots: () => mouseIsPressed,
+      showHover: () => true
+    },
+
+
   line:{
     mousePressed: (gridX,gridY) => {
       currentStartMouseX = mouseX;

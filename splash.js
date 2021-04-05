@@ -30,6 +30,12 @@ let currentFGBG = 'fg';
 let currentEyedrop = false;
 
 
+let currentGradFGStart = '00';
+let currentGradFGStop = '0E';
+let currentGradBGStart = '00';
+let currentGradBGStop = '0E';
+let currentGradFGBG = 'fg';
+
 let W;
 let H;
 let PIXW;
@@ -55,7 +61,11 @@ function setup() {
   const initalKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors'
   document.getElementById('selectKernel').value = initalKernel;
   setKernelMode(initalKernel);
-  setTool('draw'); //draw
+  
+  document.getElementById("gradianttool").click();
+//drawtool
+//gradianttool
+
   clearYXGrid();
   createCanvas(W * PIXW, H * PIXH).parent('canvasParent');
   //makePicker();
@@ -65,8 +75,7 @@ function setup() {
 
   createFileInput(loadImageFile).parent("fileButtonWrapper");
 
-
-
+  makeGradiantTable();
 }
 
 function clearYXGrid() {
@@ -114,6 +123,11 @@ function setKernelMode(modestring){
   document.getElementById("buttonDownloadAsm").style.display = DOWNLOADASM ? 'inline-block' : 'none';
   document.getElementById("asmSupportFiles").style.display = DOWNLOADASMSUPPORT ? 'inline-block' : 'none';
   
+  document.getElementById("gradiantFGBG").style.display = MULTICOLORBG ? 'inline-block' : 'none';
+  if(!MULTICOLORBG) {
+    currentGradFGBG = 'fg';
+  }
+
   document.getElementById("radiofg").style.visibility = MULTICOLORBG ? 'visible' : 'hidden';
   document.getElementById("radiobg").style.visibility = MULTICOLORBG ? 'visible' : 'hidden';
 
@@ -262,7 +276,7 @@ function mouseReleased(){
 
 
 
-const toolsWithSections = ["text","color","select"];
+const toolsWithSections = ["text","color","select", "gradiant"];
 
 function setTool(what){
   currentTool = what;   
@@ -400,49 +414,90 @@ function closeAtariColorPicker(){
 function clickAtariColor(atariKey){
   if(currentColorPickerTarget == 'fg') setFGColor(atariKey);
   if(currentColorPickerTarget == 'bg') setBGColor(atariKey);
+  if(currentColorPickerTarget == 'gradfgstart') setCurrentGradFGStart(atariKey);
+  if(currentColorPickerTarget == 'gradfgstop') setCurrentGradFGStop(atariKey);
+  if(currentColorPickerTarget == 'gradbgstart') setCurrentGradBGStart(atariKey);
+  if(currentColorPickerTarget == 'gradbgstop') setCurrentGradBGStop(atariKey);
   closeAtariColorPicker();
   if(!currentKernelMode.MULTICOLOR && currentColorPickerTarget == 'fg'){
     document.getElementById("drawtoolradio").click(); //automatically start drawing if mono...
   }
+
+  makeGradiantTable();
 }
 
 
 function setTVMode(mode){
   currentTVMode = mode;
   //makePicker();
-  useCurrentFGColor();
-  useCurrentBGColor();
+  displayCurrentFGColor();
+  displayCurrentBGColor();
+  displayCurrentGradiantColors();
+  makeGradiantTable();
 }
 function setFGColor(atariKey){
   currentFGColor = atariKey;
-  useCurrentFGColor();
+  displayCurrentFGColor();
 }
 function setBGColor(atariKey){
   currentBGColor = atariKey;
-  useCurrentBGColor();
+  displayCurrentBGColor();
 }
+function setCurrentGradFGStart(atariKey){
+  currentGradFGStart = atariKey;
+  displayCurrentGradiantColors();
+}
+function setCurrentGradFGStop(atariKey){
+  currentGradFGStop = atariKey;
+  displayCurrentGradiantColors();
+}
+function setCurrentGradBGStart(atariKey){
+  currentGradBGStart = atariKey;
+  displayCurrentGradiantColors();
+}
+function setCurrentGradBGStop(atariKey){
+  currentGradBGStop = atariKey;
+  displayCurrentGradiantColors();
+}
+
+
+function setCurrentGradFGBG(atariKey){
+  currentGradFGBG = atariKey;
+}
+
+function displayCurrentGradiantColors(){
+  console.log('displayCurrentGradiantColors');
+  const elemStart = document.getElementById('currentGradStart');
+  const elemStop = document.getElementById('currentGradStop');
+  showAtariColorOnElem(elemStart, currentGradFGBG == 'fg'? currentGradFGStart : currentGradBGStart );
+  showAtariColorOnElem(elemStop, currentGradFGBG == 'fg'? currentGradFGStop : currentGradBGStop );
+}
+
 
 function setFGvsBG(which){
   currentFGBG = which;
 }
 
 
-function useCurrentFGColor(){
+function displayCurrentFGColor(){
   const elem = document.getElementById('currentFG');
-  showFGorBGColor(elem,currentFGColor);
+  showAtariColorOnElem(elem,currentFGColor);
 }
-function useCurrentBGColor(){
+function displayCurrentBGColor(){
   const elem = document.getElementById('currentBG');
-  showFGorBGColor(elem,currentBGColor);
-
+  showAtariColorOnElem(elem,currentBGColor);
 }
-function showFGorBGColor(elem, atariColor){
-  elem.innerHTML = currentFGColor;
+
+
+function showAtariColorOnElem(elem, atariColor){
+  elem.innerHTML = atariColor;
   const hexColor = `#${HUELUM2HEX[currentTVMode][atariColor]}`;
   elem.style.backgroundColor = hexColor;
   elem.classList.remove("light");
   elem.classList.remove("dark");
+  
   elem.classList.add(textClassForHexBg(hexColor));
+  console.log(elem.classList);
   loop();
 }
 
@@ -716,4 +771,40 @@ function startEyedrop(){
 function stopEyedrop(){
   currentEyedrop = false;
   cursor(ARROW);
+}
+
+function setCurrentGradFGBG(what){
+  currentGradFGBG = what;
+  displayCurrentGradiantColors();
+  makeGradiantTable();
+}
+
+function makeGradiantTable(){
+  let stopcolor, startcolor;
+  if(currentGradFGBG == 'fg'){
+    startcolor = currentGradFGStart;
+    stopcolor = currentGradFGStop;
+  } else {
+    startcolor = currentGradBGStart;
+    stopcolor = currentGradBGStop;
+  }
+
+  const startcolorval = parseInt(startcolor, 16);
+  const stopcolorval = parseInt(stopcolor, 16);
+  const spotcount = 30;
+
+  for(let i = 0; i < spotcount; i++){
+    const elem = document.getElementById(`grad${i}`);
+
+    const newColorValueInt = (parseInt(map(i,0,spotcount-1,startcolorval,stopcolorval)/2)*2);
+    //uppser case,make two digits, prepadded  with 0
+    const newColorValueHex = ('00'+newColorValueInt.toString(16).toUpperCase()).slice(-2);
+    const hexColor = `#${HUELUM2HEX[currentTVMode][newColorValueHex]}`;
+
+    elem.style.backgroundColor = hexColor;
+  }
+}
+
+function openGradiantAtariColorPicker(startOrStop){
+  openAtariColorPicker(`grad${currentGradFGBG}${startOrStop}`);
 }

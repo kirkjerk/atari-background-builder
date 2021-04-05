@@ -112,7 +112,8 @@ select {
 }
 #sectiontext,
 #sectioncolor,
-#sectionselect {
+#sectionselect,
+#sectiongradiant {
     display: none;
     margin-left: 20px;
     background-color: #555;
@@ -141,4 +142,14 @@ summary {
 }
 .fauxlink {
     text-decoration: underline;
+}
+
+.gradrow td {
+    width: 2px;
+}
+.gradrow td.full {
+    width: auto;
+}
+.gradtable {
+    border-spacing: 0;
 }
