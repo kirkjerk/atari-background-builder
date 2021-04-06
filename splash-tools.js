@@ -100,8 +100,8 @@ const toolFunctions = {
         const spotcount = uniqueSpotYs.length - 1; //make it inclusive of endpoints for mapping
         uniqueSpotYs.forEach((y,i)=>{
           
-          const currentStartColorHex = currentGradFGBG ? currentGradFGStart : currentGradBGStart;
-          const currentStopColorHex = currentGradFGBG ? currentGradFGStop : currentGradBGStop;
+          const currentStartColorHex = currentGradFGBG == 'fg' ? currentGradFGStart : currentGradBGStart;
+          const currentStopColorHex = currentGradFGBG == 'fg' ? currentGradFGStop : currentGradBGStop;
           const currentStartColorVal = parseInt(currentStartColorHex, 16);
           const currentStopColorVal = parseInt(currentStopColorHex, 16);
           
