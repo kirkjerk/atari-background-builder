@@ -62,7 +62,7 @@ function setup() {
   document.getElementById('selectKernel').value = initalKernel;
   setKernelMode(initalKernel);
   
-  document.getElementById("gradianttool").click();
+  document.getElementById("drawtool").click();
 //drawtool
 //gradianttool
 
@@ -181,6 +181,7 @@ function draw() {
   
   if(currentShowingUploadedImage){
       image(currentShowingUploadedImage, 0, 0, width, height);
+      return;
   }
 
   noStroke();
