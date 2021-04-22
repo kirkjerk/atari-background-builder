@@ -58,7 +58,7 @@ function preload(){
 
 function setup() {
   
-  const initalKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors'
+  const initalKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors' 'AssymPF1Scanline'
   document.getElementById('selectKernel').value = initalKernel;
   setKernelMode(initalKernel);
   
@@ -76,7 +76,15 @@ function setup() {
   createFileInput(loadImageFile).parent("fileButtonWrapper");
 
   makeGradiantTable();
+  blockCanvasContextMenus();
 }
+
+function blockCanvasContextMenus(){
+    for (let element of document.getElementsByClassName("p5Canvas")) {
+      element.addEventListener("contextmenu", (e) => e.preventDefault());
+    }
+}
+
 
 function clearYXGrid() {
   yxGrid = makeUpBlankGrid();
@@ -245,6 +253,8 @@ const gridY = int(mouseY / PIXH);
 
 if(currentInkMode == 'toggle') {
   currentInkBoolean = !getInYXGrid(gridX,gridY);
+} else if(currentInkMode == 'leftright') {
+  currentInkBoolean = (mouseButton == LEFT);
 } else {
   currentInkBoolean = (currentInkMode == 'draw');
 }

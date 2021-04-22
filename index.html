@@ -69,6 +69,7 @@
                     <li>import from source code
                     <li>pass globals into kernel functions
                     <li>allow color changes indpendent of scanlines per pixel??
+                    <li>BUG: AssymPF1Scanline - not working right at >= 116 pixels
                 </ul>
                 (no promises when I'll get around to things!)
         
@@ -198,17 +199,22 @@
 
         </div>
 
-            <label> 
-            <b>inkmode:</b>
-                <!-- <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
-                <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
-                <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label>                -->
+        <h2>inkmode</h2>
+            <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
+            <br/>
+            <label><input type="radio" name="ink" onclick="setInkmode('leftright')"  ><span>left draw / right erase</span></label>
+            <br/>
+            <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
+            <br/>
+            <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label> 
+            
+                <!--
                 <select onchange='setInkmode(this.value);'>
                     <option >toggle</option>
                     <option >draw</option>
                     <option >erase</option>
-                </select>
-            </label>
+                </select>-->
+            
             <br>                                       
             
             <details open>
