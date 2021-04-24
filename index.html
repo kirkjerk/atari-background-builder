@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>splash-o-matic 2600 - large graphic editor for atari programmers</title>
+<title>atari-background-builder - large graphic editor for atari 2600 programmers</title>
 <script src="p5.min.js"></script>
 <script src="splash-tools.js"></script>
 <script src="splash-modes.js"></script>
@@ -23,7 +23,7 @@
 
         </div>-->
         <div class="center">
-            <h1>splash-o-matic 2600</h1>
+            <h1>atari-background-builder</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
@@ -31,9 +31,11 @@
             <div id="info">
                 <h2>what is this?</h2>
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
-                <p>It can generate sample code for <b>48px sprite-based</b> or <b>various Playfield</b> images. You can even import a PNG or JPG and it will do its best
-                    to show you a monochrome version you can then re-color as needed.
-                </p>
+
+                <p>Want a 48 pixel splash screen minikernel for your batari Basic or assembly game? We got that. 
+                    Want the properly flipped bits for your assembly Playfield? We got that.
+                    Want to import an existing image file as a background graphic? We got that!</p>
+
                 <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
                     batari Basic</a> 
                     may be helpful. We recommend <a href="https://marketplace.visualstudio.com/items?itemName=chunkypixel.atari-dev-studio">Atari Dev Studio</a> for VS Code.)</p>
@@ -59,6 +61,7 @@
                 <h2>todo</h2>
                 
                 <ul>
+                    <li>fill tool
                     <li>description/notes of each kernel...
                     <li>save/restore to local storage??
                     <li>more fonts
@@ -67,9 +70,8 @@
                     <li>new kernel modes: PF (mirrored assym, just mirrored, etc)
                     <li>share text tool, dynamic fonts
                     <li>import from source code
-                    <li>pass globals into kernel functions
                     <li>allow color changes indpendent of scanlines per pixel??
-                    <li>BUG: AssymPF1Scanline - not working right at >= 116 pixels
+                    <li>BUG: AssymPF1Scanline - not working right at >= 116 pixels (on my machine :-( )
                 </ul>
                 (no promises when I'll get around to things!)
         
@@ -79,7 +81,6 @@
         <div class="right">
 
             
-
         
         <h2>tool</h2>
         <div class="tools">
@@ -116,8 +117,8 @@
                         <div style='text-align:right;'><button onclick="startEyedrop()">eyedropper</button></div>
                     </div>
                     <div id="ntscpalzone">
-                        <label><input type="radio" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
-                        <label><input type="radio" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
+                        <label><input type="radio" id="tv_ntsc" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
+                        <label><input type="radio" id="tv_pal" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
                     </div>
                 </div>
             </div>
@@ -214,11 +215,11 @@
                     <option >draw</option>
                     <option >erase</option>
                 </select>-->
-            
-            <br>                                       
-            
-            <details open>
-                <summary>mode/output kernel</summary>
+                
+                
+                <details open>
+                    <summary>kernel type</summary>
+        
                 <select id="selectKernel" onchange='setKernelMode(this.value);'>
                     <option value="player48color">48px player color</option>
                     <option value="player48mono">48px player mono</option>
@@ -228,18 +229,36 @@
                 </select>
                 <br/>
                 height: <input id="height"> / <span id="maxheight"></span> 
-                <button onclick="setNewHeight()">update</button>               
+                <button onclick="setNewHeight()">update</button>
+                </details>                
+                           
+
+                <details open>
+                    <summary>runnable source code</summary>
+
+
                 <div>
-                    <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download splash.bas</button>
-                    <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download splash.asm</button>
+                    <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download abb.bas</button>
+                    <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download abb.asm</button>
                     <div id="asmSupportFiles">
                         <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
                         <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button>
                     </div>
                 </div>            
             </details>
-
             
+
+            <details open>
+                <summary>project save/load</summary>
+                <div class="marginBelow">
+                    save project:<br>
+                    <button onclick="saveProject();">Save File</button> 
+                </div>
+                <div class="marginBelow">
+                    load project:
+                    <div id="projectfileButtonWrapper"></div>
+                </div>
+            </details>
 
  
             <details>
@@ -247,15 +266,15 @@
                 (Web formats (JPG, PNG, etc) supported.
                 <br>
                 All files handled locally in browser.)
-                <div id="fileButtonWrapper"></div>
+                <div id="imagefileButtonWrapper"></div>
                 <!-- <button onclick="readImage()">convert file</button> -->
                 <label>contrast:
                 <input type="range" id="contrast" 
                 min="0" max="255" value="128" onchange="handleContrast();"></label>
                 <label><input type="checkbox" id="invert" onchange="handleInvert();">invert</label>
-              
-            
             </details>
+
+
 
 
         </div>

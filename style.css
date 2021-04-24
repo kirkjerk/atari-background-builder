@@ -153,3 +153,7 @@ summary {
 .gradtable {
     border-spacing: 0;
 }
+
+.marginBelow {
+    margin-bottom: 10px;
+}

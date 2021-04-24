@@ -29,7 +29,7 @@ SubMainLoop
    drawscreen
    goto SubMainLoop
 
-   inline splash.asm
+   inline abb.asm
 `;
 
 

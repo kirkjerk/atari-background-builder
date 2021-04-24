@@ -6,8 +6,8 @@ const modes = {
       SCREEN_WIDTH_PER: 8,
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: false,
-      DOWNLOADBAS: ()=>{download("splash.bas",code48pxBBWrap());},
-      DOWNLOADASM: ()=>{download("splash.asm",code48pxMonoASM());}
+      DOWNLOADBAS: ()=>{download("abb.bas",code48pxBBWrap());},
+      DOWNLOADASM: ()=>{download("abb.asm",code48pxMonoASM());}
   },
     player48color: {
       ATARI_WIDTH: 48,
@@ -16,8 +16,8 @@ const modes = {
       SCREEN_WIDTH_PER: 8,
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: true,
-      DOWNLOADBAS: ()=>{download("splash.bas",code48pxBBWrap());},
-      DOWNLOADASM: ()=>{download("splash.asm",code48pxColorASM());}
+      DOWNLOADBAS: ()=>{download("abb.bas",code48pxBBWrap());},
+      DOWNLOADASM: ()=>{download("abb.asm",code48pxColorASM());}
     },
 
     bbPFcolors:{
@@ -28,7 +28,7 @@ const modes = {
       SCREEN_HEIGHT_PER: 32,
       MULTICOLOR: true,
       HORIZGAP: 1,
-      DOWNLOADBAS: ()=>{download("splash.bas",codeBBpfColors());},
+      DOWNLOADBAS: ()=>{download("abb.bas",codeBBpfColors());},
     },
 
  
@@ -42,7 +42,7 @@ const modes = {
       SCREEN_HEIGHT_PER: 4,
       MULTICOLOR: true,
       MULTICOLORBG: true,
-      DOWNLOADBAS: ()=>{download("splash.bas",codeBBpfDPC());},
+      DOWNLOADBAS: ()=>{download("abb.bas",codeBBpfDPC());},
     },
 
     AssymPF1Scanline: {
@@ -52,7 +52,7 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
-      DOWNLOADASM: ()=>{download("splash.asm",codeASMpfAssymRepeated(1));},
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymRepeated(1));},
       DOWNLOADASMSUPPORT: true
     },
     

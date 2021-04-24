@@ -1,12 +1,7 @@
 
-
-
-
-
-
-
-
+let currentProjectname;
 let currentKernelMode;
+let currentKernelModeName;
 let currentTool = 'draw';
 let currentToolFunctions = toolFunctions[currentTool];
 let currentInkMode = 'toggle';
@@ -58,9 +53,11 @@ function preload(){
 
 function setup() {
   
-  const initalKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors' 'AssymPF1Scanline'
-  document.getElementById('selectKernel').value = initalKernel;
-  setKernelMode(initalKernel);
+  const initialKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors' 'AssymPF1Scanline'
+  document.getElementById('selectKernel').value = initialKernel;
+
+  setKernelMode(initialKernel);
+  currentKernelModeName = initialKernel;
   
   document.getElementById("drawtool").click();
 //drawtool
@@ -73,7 +70,8 @@ function setup() {
   //document.getElementById("picktext").click();
 
 
-  createFileInput(loadImageFile).parent("fileButtonWrapper");
+  createFileInput(loadImageFile).parent("imagefileButtonWrapper");
+  createFileInput(loadProjectFile).parent("projectfileButtonWrapper");
 
   makeGradiantTable();
   blockCanvasContextMenus();
@@ -112,7 +110,12 @@ function loadImageFile(file){
 
 
 function setKernelMode(modestring){
+  console.log({modestring});
   const mode = modes[modestring];
+
+  currentKernelMode = mode;
+  currentKernelModeName = modestring;
+
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
@@ -140,7 +143,6 @@ function setKernelMode(modestring){
   document.getElementById("radiobg").style.visibility = MULTICOLORBG ? 'visible' : 'hidden';
 
 
-  currentKernelMode = mode;
   fillBlankColorGridWithDefault();
   
   
@@ -819,3 +821,68 @@ function makeGradiantTable(){
 function openGradiantAtariColorPicker(startOrStop){
   openAtariColorPicker(`grad${currentGradFGBG}${startOrStop}`);
 }
+
+
+function saveProject(){
+  const projectname = prompt("Project name?", currentProjectname || "");
+  currentProjectname = projectname;
+
+  
+  console.log({currentKernelModeName,currentTVMode,currentFGColor,currentBGColor});
+  const project = {
+    project: currentProjectname,
+    mode:currentKernelModeName,
+    height: H,
+    tvmode: currentTVMode,
+    FGColor: currentFGColor,
+    BGColor: currentBGColor,
+    yxGrid,
+    colorGrid,
+    colorBgGrid
+  };
+
+  download(`${currentProjectname}.abb.json`,JSON.stringify(project,null,' ')); 
+}
+
+function loadProjectFile(file){
+  const project = file.data;
+  currentProjectname = project.project;
+  
+  currentKernelModeName = project.mode;
+  
+  H = project.height;
+  yxGrid = project.yxGrid;
+  colorGrid = project.colorGrid;
+  colorBgGrid = project.colorBgGrid;
+  currentTVMode = project.tvmode;
+  currentFGColor = project.FGColor;
+  currentBGColor = project.BGColor;
+  console.log({currentKernelModeName, currentTVMode,currentFGColor,currentBGColor});
+  setKernelMode(project.mode);
+  showUIFromCurrent();
+  loop();
+}
+
+function showUIFromCurrent(){
+  document.getElementById("selectKernel").value = currentKernelModeName;
+  document.getElementById("height").value = H;
+  setFGColor(currentFGColor);
+  setBGColor(currentBGColor);
+  setTVMode(currentTVMode);
+  document.getElementById(`tv_${currentTVMode}`).checked = true;
+  
+}
+
+
+//createFileInput(loadImageFile).parent("fileButtonWrapper");
+// function loadImageFile(file){
+//   if (file.type === 'image') {
+//     currentUploadedImage = createImg(file.data, '');
+//     currentUploadedImage.hide();
+//     launchReadImage(true);
+//     draw();
+
+//   } else {
+//     currentUploadedImage = null;
+//   }  
+// }
