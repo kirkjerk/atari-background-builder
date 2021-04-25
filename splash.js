@@ -425,8 +425,14 @@ function closeAtariColorPicker(){
   removePicker(currentColorPickerTarget);
 }
 function clickAtariColor(atariKey){
-  if(currentColorPickerTarget == 'fg') setFGColor(atariKey);
-  if(currentColorPickerTarget == 'bg') setBGColor(atariKey);
+  if(currentColorPickerTarget == 'fg') {
+    setFGColor(atariKey);
+    document.getElementById("radiofg").click();
+  }
+  if(currentColorPickerTarget == 'bg') {
+    setBGColor(atariKey);
+    document.getElementById("radiobg").click();
+  }
   if(currentColorPickerTarget == 'gradfgstart') setCurrentGradFGStart(atariKey);
   if(currentColorPickerTarget == 'gradfgstop') setCurrentGradFGStop(atariKey);
   if(currentColorPickerTarget == 'gradbgstart') setCurrentGradBGStart(atariKey);
