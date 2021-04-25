@@ -1,12 +1,24 @@
 function setInYXGrid(gridX,gridY,value){
-    if(gridX < 0 || gridX >= W || gridY < 0 || gridY >= H) return;
+    if(outOfBoundsYXGrid(gridX,gridY)) return;
     yxGrid[gridY][gridX] = value;
 }
 function getInYXGrid(gridX,gridY){
-    if(gridX < 0 || gridX >= W || gridY < 0 || gridY >= H) return false;
+    if(outOfBoundsYXGrid(gridX,gridY)) return undefined;
     return yxGrid[gridY][gridX];
 }
-
+function outOfBoundsYXGrid(gridX,gridY){
+  return (gridX < 0 || gridX >= W || gridY < 0 || gridY >= H);
+}
+function blankForCurrentFill(gridX,gridY){
+  return !(outOfBoundsYXGrid(gridX,gridY) || getInYXGrid(gridX,gridY) === currentInkBoolean)
+}
+function fillSquareAndRecurse(gridX,gridY){
+  setInYXGrid(gridX,gridY,currentInkBoolean);
+  if(blankForCurrentFill(gridX-1,gridY)) fillSquareAndRecurse(gridX-1,gridY);
+  if(blankForCurrentFill(gridX+1,gridY)) fillSquareAndRecurse(gridX+1,gridY);
+  if(blankForCurrentFill(gridX,gridY-1)) fillSquareAndRecurse(gridX,gridY-1);
+  if(blankForCurrentFill(gridX,gridY+1)) fillSquareAndRecurse(gridX,gridY+1);  
+}
 
 function setInColorGrid(gridY,value){
     if(gridY < 0 || gridY >= H) return;
@@ -176,6 +188,20 @@ const toolFunctions = {
       currentHotSpots = [];
     },
     showHotSpots: () => mouseIsPressed,
+    showHover: () => true
+  },
+  fill:{
+    mousePressed: (gridX,gridY) => {
+      //console.log(`fill ${gridX} ${gridY} ${currentInkBoolean}`);
+      if(blankForCurrentFill(gridX,gridY)){
+        fillSquareAndRecurse(gridX,gridY);
+      }
+      loop();
+    },
+    mouseMoved: ()=>{},
+    mouseDragged:()=>{},
+    mouseReleased:()=>{},
+    showHotSpots: () => false,
     showHover: () => true
   },
   
