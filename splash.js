@@ -774,15 +774,6 @@ function handleInvert(){
   launchReadImage(false);
 }
 
-
-function downloadMacro(){
-  download("macro.h",fileMACRO_H());
-}
-function downloadVCS(){
-  download("vcs.h",fileVCS_H());
-}
-
-
 function startEyedrop(){
   currentEyedrop = true;
   cursor(CROSS); 

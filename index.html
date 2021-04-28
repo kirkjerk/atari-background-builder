@@ -23,7 +23,7 @@
 
         </div>-->
         <div class="center">
-            <h1>atari-background-builder v0.8</h1>
+            <h1>atari-background-builder v0.82</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
@@ -243,8 +243,11 @@
                     <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download abb.bas</button>
                     <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download abb.asm</button>
                     <div id="asmSupportFiles">
-                        <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
-                        <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button>
+
+                        <!-- <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
+                        <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button> -->
+                        <a id="buttonDownloadMacro"  href='macro.h' download>macro.h</a>
+                        <a id="buttonDownloadVCS"  href='vcs.h' download>vcs.h</a>
                     </div>
                 </div>            
             </details>
