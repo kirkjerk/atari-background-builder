@@ -233,31 +233,28 @@
                 height: <input id="height"> / <span id="maxheight"></span> 
                 <button onclick="setNewHeight()">update</button>
 
-                <details open style="margin-left:20px;">
+                <details open >
                 <summary>kernel description</summary>
                 <div id="kerneldesc"></div>
                 </details>
 
-                </details>                
-                           
-
-                <details open>
+                <details open >
                     <summary>runnable source code</summary>
 
 
-                <div>
-                    <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download abb.bas</button>
-                    <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download abb.asm</button>
-                    <div id="asmSupportFiles">
+                    <div>
+                        <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download abb.bas</button>
+                        <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download abb.asm</button>
+                        <div id="asmSupportFiles">
 
-                        <!-- <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
-                        <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button> -->
-                        <a id="buttonDownloadMacro"  href='macro.h' download>macro.h</a>
-                        <a id="buttonDownloadVCS"  href='vcs.h' download>vcs.h</a>
-                    </div>
-                </div>            
-            </details>
-            
+                            <!-- <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
+                            <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button> -->
+                            <a id="buttonDownloadMacro"  href='macro.h' download>macro.h</a>
+                            <a id="buttonDownloadVCS"  href='vcs.h' download>vcs.h</a>
+                        </div>
+                    </div>            
+                </details>
+            </details>                   
 
             <details>
                 <summary>project save/load</summary>

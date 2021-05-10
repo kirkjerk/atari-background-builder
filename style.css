@@ -161,3 +161,7 @@ summary {
 #kerneldesc {
     max-width: 300px;
 }
+
+details > details {
+    margin-left: 20px;
+}
