@@ -119,12 +119,15 @@ function setKernelMode(modestring){
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
-        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT, MULTICOLORBG} = mode;
+        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT, MULTICOLORBG , DESCRIPTION} = mode;
 
   W = ATARI_WIDTH;
   H = ATARI_STARTHEIGHT;
   PIXW = SCREEN_WIDTH_PER;
   PIXH = SCREEN_HEIGHT_PER;
+
+  document.getElementById("kerneldesc").innerHTML = DESCRIPTION;
+
   document.getElementById("height").value = H;
   document.getElementById("maxheight").innerHTML = ATARI_MAXHEIGHT;
   

@@ -157,3 +157,7 @@ summary {
 .marginBelow {
     margin-bottom: 10px;
 }
+
+#kerneldesc {
+    max-width: 300px;
+}

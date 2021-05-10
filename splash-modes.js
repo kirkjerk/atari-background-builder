@@ -7,7 +7,8 @@ const modes = {
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: false,
       DOWNLOADBAS: ()=>{download("abb.bas",code48pxBBWrap());},
-      DOWNLOADASM: ()=>{download("abb.asm",code48pxMonoASM());}
+      DOWNLOADASM: ()=>{download("abb.asm",code48pxMonoASM());},
+      DESCRIPTION: 'Kernel with simple batari Basic wrapper (easily modifiable for use in assembly) Uses Player Graphics to get a 48px, monochrome image - great for splash screens.'
   },
     player48color: {
       ATARI_WIDTH: 48,
@@ -17,7 +18,8 @@ const modes = {
       SCREEN_HEIGHT_PER: 5,
       MULTICOLOR: true,
       DOWNLOADBAS: ()=>{download("abb.bas",code48pxBBWrap());},
-      DOWNLOADASM: ()=>{download("abb.asm",code48pxColorASM());}
+      DOWNLOADASM: ()=>{download("abb.asm",code48pxColorASM());},
+      DESCRIPTION: 'Kernel with simple batari Basic wrapper (easily modifiable for use in assembly) Uses Player Graphics to get a 48px multicolor (one color per scanline) image - great for detailed splash screens.'
     },
 
     bbPFcolors:{
@@ -29,6 +31,8 @@ const modes = {
       MULTICOLOR: true,
       HORIZGAP: 1,
       DOWNLOADBAS: ()=>{download("abb.bas",codeBBpfColors());},
+      DESCRIPTION: 'Standard batari Basic PF (32x11, tall pixels, changeable in code, per-scanline playfield colors)'
+
     },
 
  
@@ -43,6 +47,8 @@ const modes = {
       MULTICOLOR: true,
       MULTICOLORBG: true,
       DOWNLOADBAS: ()=>{download("abb.bas",codeBBpfDPC());},
+      DESCRIPTION: 'DPC+ / batari Basic code - utilizes custom cartridge hardware for fine, wide pixels, per-scanline colors for playfield AND per-scanline colors for background.'
+
     },
 
     AssymPF1Scanline: {
@@ -53,7 +59,8 @@ const modes = {
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
       DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymRepeated(1));},
-      DOWNLOADASMSUPPORT: true
+      DOWNLOADASMSUPPORT: true,
+      DESCRIPTION: 'Assembly Asymmetrical Playfield (Repeated) kernel, per scanline color change.'
     },
     
 
