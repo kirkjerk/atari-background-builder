@@ -61,18 +61,13 @@
                 <h2>todo</h2>
                 
                 <ul>
-                    <li>(bug: when clicking a fg or bg color, hit radio button for that tool!)
-                    <li>fill tool
-                    <li>description/notes of each kernel...
                     <li>save/restore to local storage??
                     <li>more fonts
-                    <li>undo
                     <li>local storage for drafts (or explicit save/new?)                
                     <li>new kernel modes: PF (mirrored assym, just mirrored, etc)
-                    <li>share text tool, dynamic fonts
+                    <li>publicize text tool, dynamic fonts
                     <li>import from source code
                     <li>allow color changes indpendent of scanlines per pixel??
-                    <li>BUG: AssymPF1Scanline - not working right at >= 116 pixels (on my machine :-( )
                 </ul>
                 (no promises when I'll get around to things!)
         
@@ -200,7 +195,10 @@
             </div>
             <label><input id="toolpaste" type="radio" name="tool" onclick="setTool('paste')"><span>paste</span></label>
 
+
+                
         </div>
+        <button onclick="popUndo();">undo</button>
 
         <h2>inkmode</h2>
             <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>

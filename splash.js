@@ -41,6 +41,7 @@ let yxGrid = Array();
 let colorGrid = Array();
 let colorBgGrid = Array();
 
+const undoStack = [];
 
 let sx,sy,ex,ey;
 
@@ -253,6 +254,8 @@ noLoop();
 
 function mousePressed() {
 
+  makeUndoSnapshot();
+
 const gridX = int(mouseX / PIXW);
 const gridY = int(mouseY / PIXH);
 
@@ -285,7 +288,11 @@ function mouseMoved(){
 }
 
 function mouseReleased(){  
-  currentToolFunctions.mouseReleased();
+  
+    makeUndoSnapshot();
+
+    currentToolFunctions.mouseReleased();
+  
   loop();
 }
 
@@ -886,3 +893,25 @@ function showUIFromCurrent(){
 //     currentUploadedImage = null;
 //   }  
 // }
+
+function makeUndoSnapshot(){
+  const snapshot = JSON.stringify({yxGrid,colorGrid,colorBgGrid});
+
+  const lastshot = undoStack.length > 0 ? undoStack[undoStack.length - 1] : '';
+
+  if(snapshot != lastshot){
+    undoStack.push(snapshot);
+  } 
+  //console.log('psuhed to ',undoStack.length);
+}
+function popUndo(){
+  if(undoStack.length > 1) {
+    undoStack.pop();
+    const undo = JSON.parse(undoStack[undoStack.length - 1]);
+    yxGrid = undo.yxGrid;
+    colorGrid = undo.colorGrid;
+    colorBgGrid = undo.colorBgGrid;
+  }
+  loop();
+
+}
