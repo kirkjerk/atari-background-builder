@@ -370,6 +370,12 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+function downloadMacro(){
+  download('macro.h',getMACRO());
+}
+function downloadVCS(){
+  download('vcs.h',getVCS());
+}
 
 function makePicker(which){
   

@@ -15,7 +15,7 @@ playfield_line_height=4
 padding_lines=10
 
 playfield_scanlines=#playfield_lines*#playfield_line_height
-remaining_lines=#kernel_lines-#playfield_scanlines-#padding_lines+2
+remaining_lines=#kernel_lines-#playfield_scanlines-#padding_lines+3
 
 
 NO_ILLEGAL_OPCODES = 0
@@ -67,13 +67,6 @@ PlayfieldLoop
     sta PF1                         ; 3     (21)
     lda PF2DataA,x                  ; 4     (25*)
     sta PF2                         ; 3     (28)
-    lda PF2DataB,x                  ; 4     (32)
-    tay                             ; 2     (34)
-    lda PF1DataB,x                  ; 4     (38)
-    sta PF1                         ; 3     (41)
-    lda PF0DataB,x                  ; 4     (45)
-    sty PF2                         ; 3     (48)
-    sta PF0                         ; 3     (51)
     dec PlayFieldHeightCounter      ; 5     (56)
     bne ____skip_new_row            ; 2/3   (58/59)
     lda #playfield_line_height      ; 2     (60)
@@ -263,155 +256,6 @@ PF2DataA
     .byte %10000000
     .byte %11111111
 
-   if >. != >[.+(playfield_lines)]
-      align 256
-   endif
-
-PF0DataB
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11010000
-    .byte %01010000
-    .byte %11010000
-    .byte %00010000
-    .byte %11110000
-    .byte %10000000
-    .byte %10000000
-    .byte %11000000
-    .byte %11100000
-    .byte %11000000
-    .byte %10000000
-    .byte %10000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-
-   if >. != >[.+(playfield_lines)]
-      align 256
-   endif
-
-PF1DataB
-    .byte %00101000
-    .byte %10101010
-    .byte %10101000
-    .byte %10101000
-    .byte %00101010
-    .byte %10101000
-    .byte %10101100
-    .byte %10100101
-    .byte %00100100
-    .byte %10100100
-    .byte %10100101
-    .byte %10100100
-    .byte %00100100
-    .byte %10100110
-    .byte %10100010
-    .byte %10100010
-    .byte %00100010
-    .byte %10100010
-    .byte %10100010
-    .byte %10100011
-    .byte %00100001
-    .byte %10100001
-    .byte %10100001
-    .byte %10100001
-    .byte %00100000
-    .byte %10100000
-    .byte %10100000
-    .byte %10100000
-    .byte %00100000
-    .byte %10100000
-    .byte %10100000
-    .byte %10100000
-    .byte %00100000
-    .byte %11100000
-    .byte %00000000
-    .byte %00000000
-    .byte %10000000
-    .byte %11000000
-    .byte %10000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-
-   if >. != >[.+(playfield_lines)]
-      align 256
-   endif
-
-PF2DataB
-    .byte %01000000
-    .byte %01010101
-    .byte %01000000
-    .byte %01000000
-    .byte %01010101
-    .byte %01000000
-    .byte %01100000
-    .byte %00101010
-    .byte %00100000
-    .byte %00100000
-    .byte %00101010
-    .byte %00100000
-    .byte %00100000
-    .byte %00110101
-    .byte %00010000
-    .byte %00010000
-    .byte %00010101
-    .byte %00010000
-    .byte %00010000
-    .byte %00011111
-    .byte %00001000
-    .byte %00001000
-    .byte %00001000
-    .byte %00001000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
-    .byte %00000000
 
    if >. != >[.+(playfield_lines)]
       align 256
