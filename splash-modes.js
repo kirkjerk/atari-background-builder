@@ -51,7 +51,7 @@ const modes = {
 
     },
 
-    AssymPF1Scanline: {
+    AssymPFRepeated: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 180,
       ATARI_STARTHEIGHT:44,
@@ -62,7 +62,20 @@ const modes = {
       DOWNLOADASMSUPPORT: true,
       DESCRIPTION: 'Assembly Asymmetrical Playfield (Repeated) kernel, per scanline color change.'
     },
-    
+
+    AssymPFMirrored: {
+      ATARI_WIDTH: 40,
+      ATARI_MAXHEIGHT: 180,
+      ATARI_STARTHEIGHT:44,
+      SCREEN_WIDTH_PER: 16,
+      SCREEN_HEIGHT_PER: 2,
+      MULTICOLOR: true,
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymMirrored(1));},
+      DOWNLOADASMSUPPORT: true,
+      DESCRIPTION: 'Assembly Asymmetrical Playfield (Mirrored) kernel, per scanline color change.'
+    },
+        
+
 
   }
 

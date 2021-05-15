@@ -54,7 +54,7 @@ function preload(){
 
 function setup() {
   
-  const initialKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors' 'AssymPF1Scanline'
+  const initialKernel = 'player48color';  // 'player48color' 'bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored'
   document.getElementById('selectKernel').value = initialKernel;
 
   setKernelMode(initialKernel);
