@@ -24,7 +24,7 @@
 
         </div>-->
         <div class="center">
-            <h1>atari-background-builder v0.85</h1>
+            <h1>atari-background-builder v0.86</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
@@ -95,10 +95,14 @@
         
         <h2>tool</h2>
         <div class="tools">
-            <label id="drawtool"><input type="radio" checked  name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
-            <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
-            <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
-            <label><input type="radio"  name="tool" onclick="setTool('fill')" ><span>fill</span></label>
+            
+            <div class="block2x2">
+                <label id="drawtool"><input type="radio" name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
+                <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
+                <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
+                <label><input type="radio"  id="ellipsetool" name="tool" onclick="setTool('ellipse')" ><span>ellipse</span></label>
+            </div>
+                <label><input type="radio"  name="tool" onclick="setTool('fill')" ><span>fill</span></label>
             <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
 
             <div id="sectioncolor">

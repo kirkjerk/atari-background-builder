@@ -2,7 +2,7 @@
 let currentProjectname;
 let currentKernelMode;
 let currentKernelModeName;
-let currentTool = 'draw';
+let currentTool;
 let currentToolFunctions = toolFunctions[currentTool];
 let currentInkMode = 'toggle';
 let currentInkBoolean = false; 
@@ -306,6 +306,7 @@ function mouseReleased(){
 const toolsWithSections = ["text","color","select", "gradiant"];
 
 function setTool(what){
+  
   currentTool = what;   
   currentToolFunctions = toolFunctions[what];
 

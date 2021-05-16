@@ -165,3 +165,12 @@ summary {
 details > details {
     margin-left: 20px;
 }
+
+.block2x2 {
+    width: 200px;
+    display: inline-flex;
+    flex-wrap: wrap;
+}
+.block2x2 label {
+    flex: 50%;
+}

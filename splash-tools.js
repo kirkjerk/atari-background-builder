@@ -19,7 +19,6 @@ function getSymmPixel(x){
 
 
 function includeMirrorSpots(oldspots){
-  console.log();
   const spots = [...oldspots];
   oldspots.forEach((spot)=>{
     spots.push({x:getSymmPixel(spot.x),y:spot.y});
@@ -216,6 +215,27 @@ const toolFunctions = {
     showHotSpots: () => mouseIsPressed,
     showHover: () => true
   },
+
+  ellipse:{
+    mousePressed: (gridX,gridY) => {
+      currentStartMouseX = mouseX;
+      currentStartMouseY = mouseY;
+    },
+    mouseMoved: ()=>{},
+    mouseDragged:(sx,sy,ex,ey) =>{
+      currentHotSpots = includeMirrorSpots(getAllEllipseSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey)); 
+    },
+    mouseReleased:()=>{
+      currentHotSpots.map((spot)=>{
+        setInYXGrid(spot.x,spot.y,currentInkBoolean);
+      });
+      currentHotSpots = [];
+    },
+    showHotSpots: () => mouseIsPressed,
+    showHover: () => true
+  },
+
+
   fill:{
     mousePressed: (gridX,gridY) => {
       //console.log(`fill ${gridX} ${gridY} ${currentInkBoolean}`);
@@ -316,7 +336,47 @@ function getAllRectSpotsBetween(sx,sy,ex,ey){
     return results;
     
     }
-    
+
+    function getAllEllipseSpotsBetween(rawcenterx,rawcentery,endx,endy){
+      const results = [];
+
+      //normalize centerx to be the screen pixel actually in the middle of the atari pixel
+      const centerx = (int(rawcenterx / PIXW) + .5) * PIXW;
+      const centery = (int(rawcentery / PIXH) + .5) * PIXH;
+
+      //const radiusScreenies = dist(centerx,centery,endx,endy);
+      
+      for(let y = 0; y < H; y++){
+        for(let x = 0; x < W; x++){
+          const xScreenies = PIXW * (x + .5);
+          const yScreenies = PIXH * (y + .5);
+          //console.log(x,y);
+          //if(dist(centerx, centery, xScreenies, yScreenies) <= radiusScreenies){
+          if(isScreenPointInEllipse(centerx,centery,xScreenies,yScreenies,endx,endy)){
+            results.push({x,y});
+          }
+        }
+      }
+      return results;      
+      }
+
+      function isScreenPointInEllipse(centerx,centery,xScreenies,yScreenies,endx,endy){
+        const mathResult = checkpoint(centerx,centery,xScreenies,yScreenies,endx-centerx, endy-centery);
+        
+        return mathResult <= 1;
+      }
+
+
+      //from https://www.geeksforgeeks.org/check-if-a-point-is-inside-outside-or-on-the-ellipse/
+      function checkpoint(h , k , x , y , a , b)
+      {
+          // checking the equation of
+          // ellipse with the given point
+          var p = (parseInt(Math.pow((x - h), 2)) / parseInt(Math.pow(a, 2)))
+                  + (parseInt(Math.pow((y - k), 2)) / parseInt(Math.pow(b, 2)));
+          return p;
+      }
+
     //take the mouse x,y for start and end,
     //return an array of {x:__,y:__} spots that are inbetween
     function getAllSpotsBetween(sx,sy,ex,ey){
