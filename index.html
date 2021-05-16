@@ -93,9 +93,8 @@
 
             
         
-        <h2>tool</h2>
         <div class="tools">
-            
+            <h2>drawing</h2>    
             <div class="block2x2">
                 <label id="drawtool"><input type="radio" name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
                 <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
@@ -113,10 +112,11 @@
                         <option>tiny3ishx4</option>
                     </select>
                 </div>
-    
-
-            <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
-
+                <h2>colors</h2>    
+                <div class="block2x2">
+                    <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
+                    <label id="gradianttool"><input type="radio"  name="tool" onclick="setTool('gradiant')" ><span>gradient</span></label>    
+                </div>
             <div id="sectioncolor">
                 <div class="cols2">
                     <div>
@@ -150,8 +150,7 @@
                     </div>
                 </div>
             </div>
-            <label id="gradianttool"><input type="radio"  name="tool" onclick="setTool('gradiant')" ><span>gradient</span></label>
-
+            
             <div id="sectiongradiant">
 
                 <table class="gradtable">
@@ -211,6 +210,7 @@
             <div id="colorPickerHolder_gradbgstart"></div>
             <div id="colorPickerHolder_gradbgstop"></div>
             
+            <h2>edit</h2>    
 
             <label><input type="radio" name="tool" onclick="setTool('select')"><span>select</span></label>
             <div id="sectionselect"> 
