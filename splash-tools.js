@@ -1,7 +1,32 @@
 function setInYXGrid(gridX,gridY,value){
     if(outOfBoundsYXGrid(gridX,gridY)) return;
     yxGrid[gridY][gridX] = value;
+    yxGrid[gridY][getSymmPixel(gridX)] = value;
 }
+
+function getSymmPixel(x){
+  if(! currentKernelMode.PIXDUP) return x;
+  const midpoint = (currentKernelMode.ATARI_WIDTH / 2);
+  if(currentKernelMode.PIXDUP === 'mirror') {
+    const delta = ( midpoint - 1) - x;
+    return midpoint + delta;
+  }  
+  if(currentKernelMode.PIXDUP === 'repeat') {
+    const delta = x % midpoint;
+    return x < midpoint ? midpoint + delta : delta;
+  }  
+}
+
+
+function includeMirrorSpots(oldspots){
+  console.log();
+  const spots = [...oldspots];
+  oldspots.forEach((spot)=>{
+    spots.push({x:getSymmPixel(spot.x),y:spot.y});
+  });
+  return spots;
+}
+
 function getInYXGrid(gridX,gridY){
     if(outOfBoundsYXGrid(gridX,gridY)) return undefined;
     return yxGrid[gridY][gridX];
@@ -160,7 +185,8 @@ const toolFunctions = {
     },
     mouseMoved: ()=>{},
     mouseDragged:(sx,sy,ex,ey) =>{
-      currentHotSpots = getAllSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
+      currentHotSpots = includeMirrorSpots(getAllSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey)); 
+
     },
     mouseReleased:()=>{
       currentHotSpots.map((spot)=>{
@@ -179,7 +205,7 @@ const toolFunctions = {
     },
     mouseMoved: ()=>{},
     mouseDragged:(sx,sy,ex,ey) =>{
-      currentHotSpots = getAllRectSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey); 
+      currentHotSpots = includeMirrorSpots(getAllRectSpotsBetween(currentStartMouseX,currentStartMouseY,ex,ey)); 
     },
     mouseReleased:()=>{
       currentHotSpots.map((spot)=>{
@@ -233,6 +259,7 @@ const toolFunctions = {
         currentTextPixels.forEach((pixel)=>{
           currentHotSpots.push({x:gridX+pixel.x, y:gridY+pixel.y});
         });
+        currentHotSpots = includeMirrorSpots(currentHotSpots);
         
       },
       mouseDragged:(sx,sy,ex,ey) =>{},
@@ -253,6 +280,7 @@ const toolFunctions = {
           currentClipboard.forEach((pixel)=>{
             currentHotSpots.push({x:gridX+pixel.x, y:gridY+pixel.y});
           });
+          currentHotSpots = includeMirrorSpots(currentHotSpots);
         },
         mouseDragged:(sx,sy,ex,ey) =>{},
         mouseReleased:()=>{},

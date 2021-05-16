@@ -24,7 +24,7 @@
 
         </div>-->
         <div class="center">
-            <h1>atari-background-builder v0.82</h1>
+            <h1>atari-background-builder v0.85</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
@@ -33,9 +33,9 @@
                 <h2>what is this?</h2>
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
 
-                <p>Want a 48 pixel splash screen minikernel for your batari Basic or assembly game? We got that. 
-                    Want the properly flipped bits for your assembly Playfield? We got that.
-                    Want to import an existing image file as a background graphic? We got that!</p>
+                <p>Want a <b>48 pixel splash screen minikernel</b> for your batari Basic or assembly game? We got that. 
+                    Want the properly flipped bits for your <b>assembly Playfield</b>? (Assymmetric, Mirrored, or Repeated?) We got that.
+                    Want to <b>import an existing image file</b> as a background graphic? We got that!</p>
 
                 <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
                     batari Basic</a> 
@@ -62,6 +62,8 @@
                 <h2>todo</h2>
                 
                 <ul>
+                    <li>multiple scanlines per onscreen pixel
+                    <li>circle and ellipse
                     <li>show estimate of ROM size
                     <li>save/restore to local storage??
                     <li>more fonts
@@ -227,9 +229,10 @@
                     <option value="player48mono">48px player mono</option>
                     <option value="bbPFcolors">bB color PF</option>
                     <option value="bbPFDPCcolors">bB DPC+ color PF</option>
-                    <option value="AssymPFRepeated">ASM Assymetrical (Repeated) color</option>
-                    <option value="AssymPFMirrored">ASM Assymetrical (Mirrored) color</option>
-                    
+                    <option value="AssymPFRepeated">ASM Assymmetrical (Repeated) color</option>
+                    <option value="AssymPFMirrored">ASM Assymmetrical (Mirrored) color</option>
+                    <option value="SymPFRepeated">ASM Symmetrical (Repeated) color</option>
+                    <option value="SymPFMirrored">ASM Symmetrical (Mirrored) color</option>
                 </select>
                 <br/>
                 height: <input id="height"> / <span id="maxheight"></span> 
