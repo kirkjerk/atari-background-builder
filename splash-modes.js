@@ -54,7 +54,7 @@ const modes = {
     AssymPFRepeated: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 180,
-      ATARI_STARTHEIGHT:44,
+      ATARI_STARTHEIGHT:80,
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
@@ -66,7 +66,7 @@ const modes = {
     AssymPFMirrored: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 180,
-      ATARI_STARTHEIGHT:44,
+      ATARI_STARTHEIGHT:80,
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
@@ -78,7 +78,7 @@ const modes = {
     SymPFMirrored: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 180,
-      ATARI_STARTHEIGHT:44,
+      ATARI_STARTHEIGHT:80,
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
@@ -90,7 +90,7 @@ const modes = {
     SymPFRepeated: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 180,
-      ATARI_STARTHEIGHT:44,
+      ATARI_STARTHEIGHT:80,
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,

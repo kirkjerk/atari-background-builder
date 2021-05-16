@@ -148,6 +148,10 @@ function setKernelMode(modestring){
 
 
   fillBlankColorGridWithDefault();
+
+  if(mode.PIXDUP){
+    duplicateYXGridHalves();
+  }
   
   
   resizeCanvas(W*SCREEN_WIDTH_PER, H * SCREEN_HEIGHT_PER);
@@ -920,4 +924,17 @@ function popUndo(){
   }
   loop();
 
+}
+
+
+
+function duplicateYXGridHalves() {
+  makeUndoSnapshot();
+  for(let y = 0; y < yxGrid.length; y++){
+    const row = yxGrid[y];
+    for(let x = 0; x < currentKernelMode.ATARI_WIDTH / 2;  x++){
+      console.log(`row[${getSymmPixel(x)}] = row[${x}] `);
+      row[getSymmPixel(x)] = row[x];
+    }
+  }
 }
