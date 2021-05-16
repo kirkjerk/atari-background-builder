@@ -101,8 +101,20 @@
                 <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
                 <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
                 <label><input type="radio"  id="ellipsetool" name="tool" onclick="setTool('ellipse')" ><span>ellipse</span></label>
-            </div>
                 <label><input type="radio"  name="tool" onclick="setTool('fill')" ><span>fill</span></label>
+            </div>
+                
+
+                <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')" ><span>text</span></label>
+                <div id="sectiontext">
+                    <input id="text" placeholder="Your Text Here" 
+                    onchange='setTextPixels()' onkeyup="setTextPixels()">
+                    <br>font: <select onchange="setFont(this.value);">
+                        <option>tiny3ishx4</option>
+                    </select>
+                </div>
+    
+
             <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
 
             <div id="sectioncolor">
@@ -199,14 +211,6 @@
             <div id="colorPickerHolder_gradbgstart"></div>
             <div id="colorPickerHolder_gradbgstop"></div>
             
-            <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')" ><span>text</span></label>
-            <div id="sectiontext">
-                <input id="text" placeholder="Your Text Here" 
-                onchange='setTextPixels()' onkeyup="setTextPixels()">
-                <br>font: <select onchange="setFont(this.value);">
-                    <option>tiny3ishx4</option>
-                </select>
-            </div>
 
             <label><input type="radio" name="tool" onclick="setTool('select')"><span>select</span></label>
             <div id="sectionselect"> 
