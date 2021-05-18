@@ -174,3 +174,7 @@ details > details {
 .block2x2 label {
     flex: 50%;
 }
+
+#scanlinecount {
+    display: none;
+}

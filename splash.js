@@ -31,6 +31,8 @@ let currentGradBGStart = '00';
 let currentGradBGStop = '0E';
 let currentGradFGBG = 'fg';
 
+let currentScanlinesPer = 1;
+
 let W;
 let H;
 let PIXW;
@@ -69,6 +71,9 @@ function setup() {
   //makePicker();
   setFont('tiny3ishx4');
   //document.getElementById("picktext").click();
+
+  document.getElementById('scanlinecount').value = 1;
+  setScanlinesPer(1);
 
 
   createFileInput(loadImageFile).parent("imagefileButtonWrapper");
@@ -111,7 +116,6 @@ function loadImageFile(file){
 
 
 function setKernelMode(modestring){
-  console.log({modestring});
   const mode = modes[modestring];
 
   currentKernelMode = mode;
@@ -119,17 +123,14 @@ function setKernelMode(modestring){
 
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
-        SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT,
+        SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT, LINEHEIGHTS,
         DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT, MULTICOLORBG , DESCRIPTION} = mode;
 
-  W = ATARI_WIDTH;
-  H = ATARI_STARTHEIGHT;
-  PIXW = SCREEN_WIDTH_PER;
-  PIXH = SCREEN_HEIGHT_PER;
+
 
   document.getElementById("kerneldesc").innerHTML = DESCRIPTION;
 
-  document.getElementById("height").value = H;
+  document.getElementById("height").value = ATARI_STARTHEIGHT;
   document.getElementById("maxheight").innerHTML = ATARI_MAXHEIGHT;
   
   document.getElementById("info").style.width = `${W*PIXW}px`;
@@ -153,8 +154,19 @@ function setKernelMode(modestring){
     duplicateYXGridHalves();
   }
   
+  document.getElementById('scanlinecount').style.display = LINEHEIGHTS ? 'block' : 'none';
+  if(! LINEHEIGHTS) {
+    currentScanlinesPer = 1;
+    document.getElementById('scanlinecount').value = 1;
+  }
+  setScanlinesPer(currentScanlinesPer);
   
-  resizeCanvas(W*SCREEN_WIDTH_PER, H * SCREEN_HEIGHT_PER);
+  W = ATARI_WIDTH;
+  H = ATARI_STARTHEIGHT;
+  PIXW = SCREEN_WIDTH_PER;
+  PIXH = SCREEN_HEIGHT_PER * currentScanlinesPer;
+
+  resizeCanvas(W*PIXW, H * PIXH);
   loop();
 }
 
@@ -338,13 +350,20 @@ function setInkmode(what){
 
 function setNewHeight(){
   const elem = document.getElementById('height');
-  const newHeight = parseInt(elem.value);
+  let newHeight = parseInt(elem.value);
   
   elem.classList.remove("error");
 
-  if(isNaN(newHeight) || newHeight < 0 || newHeight > currentKernelMode.ATARI_MAXHEIGHT){
+  if(isNaN(newHeight) || newHeight < 0) {
     elem.classList.add("error");
+    return;
   }
+
+  if(newHeight * currentScanlinesPer > currentKernelMode.ATARI_MAXHEIGHT){
+    newHeight = floor(currentKernelMode.ATARI_MAXHEIGHT / currentScanlinesPer);
+    elem.value = newHeight;
+  }
+
 
   const oldgrid = yxGrid;
   yxGrid = Array();
@@ -845,8 +864,6 @@ function saveProject(){
   const projectname = prompt("Project name?", currentProjectname || "");
   currentProjectname = projectname;
 
-  
-  console.log({currentKernelModeName,currentTVMode,currentFGColor,currentBGColor});
   const project = {
     project: currentProjectname,
     mode:currentKernelModeName,
@@ -856,7 +873,8 @@ function saveProject(){
     BGColor: currentBGColor,
     yxGrid,
     colorGrid,
-    colorBgGrid
+    colorBgGrid,
+    currentScanlinesPer
   };
 
   download(`${currentProjectname}.abb.json`,JSON.stringify(project,null,' ')); 
@@ -875,8 +893,10 @@ function loadProjectFile(file){
   currentTVMode = project.tvmode;
   currentFGColor = project.FGColor;
   currentBGColor = project.BGColor;
-  console.log({currentKernelModeName, currentTVMode,currentFGColor,currentBGColor});
+  currentScanlinesPer = project.currentScanlinesPer;
+  
   setKernelMode(project.mode);
+
   showUIFromCurrent();
   loop();
 }
@@ -887,6 +907,8 @@ function showUIFromCurrent(){
   setFGColor(currentFGColor);
   setBGColor(currentBGColor);
   setTVMode(currentTVMode);
+  setScanlinesPer(currentScanlinesPer);
+  document.getElementById("scanlinecount").value = currentScanlinesPer;
   document.getElementById(`tv_${currentTVMode}`).checked = true;
   
 }
@@ -934,8 +956,30 @@ function duplicateYXGridHalves() {
   for(let y = 0; y < yxGrid.length; y++){
     const row = yxGrid[y];
     for(let x = 0; x < currentKernelMode.ATARI_WIDTH / 2;  x++){
-      console.log(`row[${getSymmPixel(x)}] = row[${x}] `);
       row[getSymmPixel(x)] = row[x];
     }
   }
+}
+
+function setScanlinesPer(lines){
+  currentScanlinesPer = lines;
+
+  if(H * currentScanlinesPer > currentKernelMode.ATARI_MAXHEIGHT){
+    H = floor(currentKernelMode.ATARI_MAXHEIGHT / currentScanlinesPer);
+    document.getElementById('height').value = H;   
+  }
+
+  PIXH = currentKernelMode.SCREEN_HEIGHT_PER * currentScanlinesPer;
+  resizeCanvas(W*PIXW, H * PIXH);
+
+  const mulElem = document.getElementById('showmullinesper');
+  if(lines == 1){
+      mulElem.style.display = 'none';
+  } else {
+    mulElem.style.display = 'inline-block';
+    mulElem.innerHTML = `* ${lines}`;
+  }
+   
+  
+  
 }

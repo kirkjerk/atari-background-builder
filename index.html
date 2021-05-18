@@ -72,6 +72,7 @@
                         <ul>
                             <li>show estimate of ROM size
                             <li>save/restore to local storage??
+                            <li>show actual line color in the preview pixels
                             <li>show current color selection in color picker?
                             <li>more fonts
                             <li>surface font editor
@@ -80,7 +81,9 @@
                         </ul>
                         <li>Bugs
                         <ul>
+                            <li>fill tool / toggle mode, on already lit thing erases everything?
                             <li>undo should probably deal with modes etc as well as content
+                            
                         </ul>            
                     </ul>
                     (no promises when I'll get around to things!)
@@ -253,9 +256,35 @@
                     <option value="SymPFRepeated">ASM Symmetrical (Repeated) color</option>
                     <option value="SymPFMirrored">ASM Symmetrical (Mirrored) color</option>
                 </select>
-                <br/>
-                height: <input id="height"> / <span id="maxheight"></span> 
-                <button onclick="setNewHeight()">update</button>
+                <select id="scanlinecount" onchange="setScanlinesPer(this.value)">
+                    <option value="1" selected>1 Scanline Kernel</option>
+                    <option value="2">2 Scanline Kernel</option>
+                    <option value="3">3 Scanline Kernel</option>
+                    <option value="4">4 Scanline Kernel</option>
+                    <option value="5">5 Scanline Kernel</option>
+                    <option value="6">6 Scanline Kernel</option>
+                    <option value="7">7 Scanline Kernel</option>
+                    <option value="8">8 Scanline Kernel</option>
+                    <option value="9">9 Scanline Kernel</option>
+                    <option value="10">10 Scanline Kernel</option>
+                    <option value="11">11 Scanline Kernel</option>
+                    <option value="12">12 Scanline Kernel</option>
+                    <option value="13">13 Scanline Kernel</option>
+                    <option value="14">14 Scanline Kernel</option>
+                    <option value="15">15 Scanline Kernel</option>
+                    <option value="16">16 Scanline Kernel</option>
+                    <option value="17">17 Scanline Kernel</option>
+                    <option value="18">18 Scanline Kernel</option>
+                    <option value="19">19 Scanline Kernel</option>
+                    <option value="20">20 Scanline Kernel</option>
+                </select>
+
+                <div>
+                    height: <input id="height">
+                    <span id="showmullinesper"></span>
+                    / <span id="maxheight"></span> 
+                    <button onclick="setNewHeight()">update</button>
+                </div>
 
                 <details open >
                 <summary>kernel description</summary>

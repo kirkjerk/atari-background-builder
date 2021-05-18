@@ -58,9 +58,10 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
-      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymRepeated(1));},
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymRepeated(currentScanlinesPer));},
       DOWNLOADASMSUPPORT: true,
-      DESCRIPTION: 'Assembly Asymmetrical Playfield (Repeated) kernel, per scanline color change.'
+      DESCRIPTION: 'Assembly Asymmetrical Playfield (Repeated) kernel, per scanline color change.',
+      LINEHEIGHTS: true
     },
 
     AssymPFMirrored: {
@@ -70,9 +71,10 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
-      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymMirrored(1));},
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfAssymMirrored(currentScanlinesPer));},
       DOWNLOADASMSUPPORT: true,
-      DESCRIPTION: 'Assembly Asymmetrical Playfield (Mirrored) kernel, per scanline color change.'
+      DESCRIPTION: 'Assembly Asymmetrical Playfield (Mirrored) kernel, per scanline color change.',
+      LINEHEIGHTS: true
     },
         
     SymPFMirrored: {
@@ -82,10 +84,11 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
-      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfSymMirrored(1));},
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfSymMirrored(currentScanlinesPer));},
       DOWNLOADASMSUPPORT: true,
       DESCRIPTION: 'Assembly Symmetrical Playfield (Mirrored) kernel, per scanline color change.',
-      PIXDUP: 'mirror'
+      PIXDUP: 'mirror',
+      LINEHEIGHTS: true
     },
     SymPFRepeated: {
       ATARI_WIDTH: 40,
@@ -94,10 +97,11 @@ const modes = {
       SCREEN_WIDTH_PER: 16,
       SCREEN_HEIGHT_PER: 2,
       MULTICOLOR: true,
-      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfSymRepeated(1));},
+      DOWNLOADASM: ()=>{download("abb.asm",codeASMpfSymRepeated(currentScanlinesPer));},
       DOWNLOADASMSUPPORT: true,
       DESCRIPTION: 'Assembly Symmetrical Playfield (Repeated) kernel, per scanline color change.',
-      PIXDUP: 'repeat'
+      PIXDUP: 'repeat',
+      LINEHEIGHTS: true
     },        
 
     
