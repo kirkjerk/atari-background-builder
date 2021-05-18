@@ -241,11 +241,15 @@ if(currentToolFunctions.showHover()){
   rect(x * PIXW, y * PIXH, PIXW, PIXH);
 }
 
-// show hot spots for rect tool or line tool...
+// show hot spots for rect tool or line tool, etc...
 if(currentToolFunctions.showHotSpots()){
   //half tone current color or black
-  fill(currentInkBoolean ? getColorForRow(y,true) : `#00000087`);
+  
     currentHotSpots.map((spot)=>{
+        //console.log();
+        //fill(255,0,0);
+        fill(currentInkBoolean ? getColorForRow(spot.y,true) : `#00000087`);
+        stroke(currentInkBoolean ? getColorForRow(spot.y,true) : `#00000087`);
         rect(spot.x * PIXW, spot.y * PIXH, PIXW, PIXH); 
     });
 }
