@@ -34,7 +34,7 @@ function outOfBoundsYXGrid(gridX,gridY){
   return (gridX < 0 || gridX >= W || gridY < 0 || gridY >= H);
 }
 function blankForCurrentFill(gridX,gridY){
-  return !(outOfBoundsYXGrid(gridX,gridY) || getInYXGrid(gridX,gridY) === currentInkBoolean)
+  return (!outOfBoundsYXGrid(gridX,gridY)) && (! getInYXGrid(gridX,gridY) == currentInkBoolean);
 }
 function fillSquareAndRecurse(gridX,gridY){
   setInYXGrid(gridX,gridY,currentInkBoolean);
