@@ -73,6 +73,7 @@ const toolFunctions = {
   
     color: {
       mousePressed: (gridX,gridY) => {
+        console.log('color pressed');
         if(!currentEyedrop){
           if(inBoundsAtariPixels(gridX,gridY)) {
             colorGrid[gridY] = currentFGColor;
@@ -88,6 +89,7 @@ const toolFunctions = {
       },
       mouseMoved: ()=>{},
       mouseDragged: (sx,sy,ex,ey) => {
+        console.log('color dragged');
         const spots = getAllSpotsBetween(sx,sy,ex,ey); 
         if((!currentKernelMode.MULTICOLORBG) || currentFGBG == 'fg'){
           spots.map((spot)=>{

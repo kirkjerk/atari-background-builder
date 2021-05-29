@@ -58,7 +58,7 @@ function setup() {
   
   populateKernelSelectList();
 
-  const initialKernel = 'bBTitle_48x2';  //  'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2'
+  const initialKernel = 'player48color';  //  '' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2'
   document.getElementById('selectKernel').value = initialKernel;
 
   setKernelMode(initialKernel);
@@ -191,19 +191,24 @@ function fillBlankColorGridWithDefault(){
 
 function getColorForRow(y,half){
   const alpha = half?'87':'';
-  if(! currentKernelMode.MULTICOLOR || ! colorGrid[y]) {
+  if(! currentKernelMode.MULTICOLOR){
     return `#${HUELUM2HEX[currentTVMode][currentFGColor]}${alpha}`;
-  } else {
-    return `#${HUELUM2HEX[currentTVMode][colorGrid[y]]}${alpha}`;
   }
+  if(! colorGrid[y]) {
+    return `#ffffff${alpha}`;
+  }
+  return `#${HUELUM2HEX[currentTVMode][colorGrid[y]]}${alpha}`;
+  
 }
 function getBgColorForRow(y){
-  if(! currentKernelMode.MULTICOLORBG || ! colorBgGrid[y]) {
+  if(! currentKernelMode.MULTICOLOR){
     return `#${HUELUM2HEX[currentTVMode][currentBGColor]}`;
-  } else {
-    //console.log(colorBgGrid[y], );
-    return `#${HUELUM2HEX[currentTVMode][colorBgGrid[y]]}`;
   }
+  if(! colorBgGrid[y]){
+    return `#000000`;
+  }
+  return `#${HUELUM2HEX[currentTVMode][colorBgGrid[y]]}`;
+
 }
 
 

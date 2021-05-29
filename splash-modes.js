@@ -115,9 +115,9 @@ const modes = {
     bBTitle_48x2: {
       ATARI_WIDTH: 40,
       ATARI_MAXHEIGHT: 85,
-      ATARI_STARTHEIGHT:40,
-      SCREEN_WIDTH_PER: 16,
-      SCREEN_HEIGHT_PER: 4,
+      ATARI_STARTHEIGHT:50,
+      SCREEN_WIDTH_PER: 10,
+      SCREEN_HEIGHT_PER: 10,
       MULTICOLOR: true,
       DOWNLOADASM: ()=>{download("48x2_1_image.asm",codeASMbBTitle_48x2());},
       NAME:'bB Titlescreen (mini)Kernel: 48x2',

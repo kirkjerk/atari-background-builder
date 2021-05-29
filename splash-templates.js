@@ -389,7 +389,7 @@ ${colorblock}
 }
 function codeBBpfColors() {
    const pixelblock = getBBPixelBlock();
-   const colorblock = getBBColorBlock(colorGrid);
+   const colorblock = getBBColorBlock(colorGrid ,'0E');
 
    return `    set kernel_options pfcolors 
 startLoop
@@ -410,8 +410,8 @@ ${colorblock}end
 
 function codeBBpfDPC(){
    const pixelblock = getBBPixelBlock();
-   const colorblock = getBBColorBlock(colorGrid);
-   const bkcolor = getBBColorBlock(colorBgGrid);
+   const colorblock = getBBColorBlock(colorGrid, '0E');
+   const bkcolor = getBBColorBlock(colorBgGrid, '00');
    return `   set kernel DPC+
 
    
@@ -511,11 +511,12 @@ function getBBPixelBlock() {
    }
    return pixelblock;
 }
-function getBBColorBlock(grid){
+function getBBColorBlock(grid, colorIfNull){
    let colorblock = '';
 
    for(let y = 0; y < H; y++){
-      colorblock += `   $${grid[y]}\n`
+      const colorbyte = grid[y] ? grid[y] : colorIfNull;
+      colorblock += `   $${colorbyte}\n`
    } 
    return colorblock;
 }
@@ -524,7 +525,8 @@ function getBBColorBlock(grid){
 function makeColorBytes(){ //reverse order
    let colorblock = '';
    for(let y = H-1; y >= 0; y--){
-      colorblock += `   .byte $${colorGrid[y]}\n`
+      const colorbyte = colorGrid[y] ? colorGrid[y] : '0E';
+      colorblock += `   .byte $${colorbyte}\n`
    }
    return colorblock;
 }
@@ -1257,428 +1259,84 @@ function codeASMbBTitle_48x2(){
    
    let colorblock = makeColorBytes();
 
-   return ` ;*** The height of the displayed data...
-   bmp_48x2_1_window = 50
-   
-    ;*** The height of the bitmap data. This can be larger than 
-    ;*** the displayed data height, if you're scrolling or animating 
-    ;*** the data...
-   bmp_48x2_1_height = 50
-   
-      if >. != >[.+(bmp_48x2_1_height)]
-         align 256
-      endif
-    BYTE 0 ; leave this here!
-   
-   
-    ;*** The color of each line in the bitmap, in reverse order...
-   bmp_48x2_1_colors 
-      .byte $C4
-      .byte $C4
-      .byte $C4
-      .byte $C6
-      .byte $C6
-      .byte $C6
-      .byte $C6
-      .byte $C8
-      .byte $C8
-      .byte $C8
-      .byte $C8
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $CA
-      .byte $22
-      .byte $22
-      .byte $84
-      .byte $84
-      .byte $84
-      .byte $84
-      .byte $2A
-      .byte $50
-      .byte $50
-      .byte $50
-      .byte $50
-      .byte $50
-      .byte $50
-      .byte $50
-      .byte $3C
-      .byte $3C
-      .byte $3C
-      .byte $3C
-      .byte $3C
-      .byte $3C
-      .byte $22
-      .byte $22
-      .byte $22
-      .byte $22
-      .byte $22
-      .byte $22
-      .byte $46
-      .byte $46
-      .byte $46
-      .byte $46
-      .byte $46
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_00
-    ; *** replace this block with your bimap_00 data block...
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %01111111
-      BYTE %01111111
-      BYTE %00111111
-      BYTE %00111111
-      BYTE %00011111
-      BYTE %00011111
-      BYTE %00001111
-      BYTE %00000111
-      BYTE %00000111
-      BYTE %00000011
-      BYTE %00000001
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_01
-    ; *** replace this block with your bimap_01 data block...
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %01111111
-      BYTE %00011111
-      BYTE %00001110
-      BYTE %00000010
-      BYTE %00000010
-      BYTE %00000010
-      BYTE %00000011
-      BYTE %00000011
-      BYTE %00100111
-      BYTE %00100111
-      BYTE %00100111
-      BYTE %00100111
-      BYTE %00100111
-      BYTE %00110111
-      BYTE %00011111
-      BYTE %00001111
-      BYTE %00000011
-      BYTE %00000001
-      BYTE %00000001
-      BYTE %00000011
-      BYTE %00000010
-      BYTE %00000011
-      BYTE %00000111
-      BYTE %00000001
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00101010
-      BYTE %00101010
-      BYTE %00111010
-      BYTE %00101010
-      BYTE %00101010
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_02
-    ; *** replace this block with your bimap_02 data block...
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111110
-      BYTE %11111000
-      BYTE %11110000
-      BYTE %01110000
-      BYTE %01000000
-      BYTE %01000000
-      BYTE %01000000
-      BYTE %11000000
-      BYTE %11000000
-      BYTE %11100100
-      BYTE %11100100
-      BYTE %11100100
-      BYTE %11100100
-      BYTE %11100100
-      BYTE %11101100
-      BYTE %11111000
-      BYTE %11110000
-      BYTE %11000000
-      BYTE %10000000
-      BYTE %10000000
-      BYTE %11000000
-      BYTE %01000000
-      BYTE %11000000
-      BYTE %11100000
-      BYTE %10000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %11011000
-      BYTE %10010000
-      BYTE %10010000
-      BYTE %10010000
-      BYTE %10010000
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_03
-    ; *** replace this block with your bimap_03 data block...
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111110
-      BYTE %11111100
-      BYTE %11111000
-      BYTE %11110000
-      BYTE %11100000
-      BYTE %11100000
-      BYTE %11100000
-      BYTE %11000000
-      BYTE %11000000
-      BYTE %10000000
-      BYTE %10000000
-      BYTE %10000000
-      BYTE %10000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %11001110
-      BYTE %10101010
-      BYTE %10101010
-      BYTE %10101010
-      BYTE %11001010
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_04
-    ; *** replace this block with your bimap_04 data block...
-      BYTE %11111111
-      BYTE %11001111
-      BYTE %00000011
-      BYTE %00000011
-      BYTE %00000001
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %11001100
-      BYTE %10101000
-      BYTE %10101100
-      BYTE %10101000
-      BYTE %11001100
-   
-   
-      if >. != >[.+bmp_48x2_1_height]
-         align 256
-      endif
-   
-   
-   bmp_48x2_1_05
-    ; *** replace this block with your bimap_05 data block...
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %11111111
-      BYTE %01111111
-      BYTE %01111111
-      BYTE %00111111
-      BYTE %00000111
-      BYTE %00000001
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-      BYTE %00000000
-   
-   
-   
+   return `
+
+ ;*** The height of the displayed data...
+bmp_48x2_1_window = 50
+
+ ;*** The height of the bitmap data. This can be larger than 
+ ;*** the displayed data height, if you're scrolling or animating 
+ ;*** the data...
+bmp_48x2_1_height = 50
+
+   if >. != >[.+(bmp_48x2_1_height)]
+      align 256
+   endif
+ BYTE 0 ; leave this here!
+
+
+ ;*** The color of each line in the bitmap, in reverse order...
+bmp_48x2_1_colors 
+${colorblock}
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_00
+ ; *** replace this block with your bimap_00 data block...
+${block[0]}
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_01
+ ; *** replace this block with your bimap_01 data block...
+${block[1]}
+
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_02
+ ; *** replace this block with your bimap_02 data block...
+${block[2]}
+
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_03
+ ; *** replace this block with your bimap_03 data block...
+${block[3]}
+
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_04
+ ; *** replace this block with your bimap_04 data block...
+${block[4]}
+
+
+   if >. != >[.+bmp_48x2_1_height]
+      align 256
+   endif
+
+
+bmp_48x2_1_05
+ ; *** replace this block with your bimap_05 data block...
+${block[5]}
+
+
 `; 
 };
