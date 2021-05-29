@@ -244,16 +244,8 @@
                 <details open>
                     <summary>kernel type</summary>
         
-                <select id="selectKernel" onchange='setKernelMode(this.value);'>
-                    <option value="player48color">48px player color</option>
-                    <option value="player48mono">48px player mono</option>
-                    <option value="bbPFcolors">bB color PF</option>
-                    <option value="bbPFDPCcolors">bB DPC+ color PF</option>
-                    <option value="AssymPFRepeated">ASM Assymmetrical (Repeated) color</option>
-                    <option value="AssymPFMirrored">ASM Assymmetrical (Mirrored) color</option>
-                    <option value="SymPFRepeated">ASM Symmetrical (Repeated) color</option>
-                    <option value="SymPFMirrored">ASM Symmetrical (Mirrored) color</option>
-                </select>
+                <select id="selectKernel" onchange='setKernelMode(this.value);'></select>
+                
                 <select id="scanlinecount" onchange="setScanlinesPer(this.value)">
                     <option value="1" selected>1 Scanline Kernel</option>
                     <option value="2">2 Scanline Kernel</option>

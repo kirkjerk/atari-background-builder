@@ -56,7 +56,9 @@ function preload(){
 
 function setup() {
   
-  const initialKernel = 'player48color';  // 'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored'
+  populateKernelSelectList();
+
+  const initialKernel = 'bBTitle_48x2';  //  'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2'
   document.getElementById('selectKernel').value = initialKernel;
 
   setKernelMode(initialKernel);
@@ -983,7 +985,15 @@ function setScanlinesPer(lines){
     mulElem.style.display = 'inline-block';
     mulElem.innerHTML = `* ${lines}`;
   }
-   
-  
-  
+}
+
+
+function populateKernelSelectList(){
+  const sel = document.getElementById('selectKernel');
+  Object.keys(modes).forEach(thing =>{
+    const key = thing;
+    const name  = modes[key].NAME;
+    sel.add(new Option(name,key));
+  });
+
 }
