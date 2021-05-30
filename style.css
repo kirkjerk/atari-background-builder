@@ -179,3 +179,7 @@ details > details {
 #scanlinecount {
     display: none;
 }
+
+#downloadButtonWrapper button {
+    display: block;
+}

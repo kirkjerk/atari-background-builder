@@ -1262,12 +1262,12 @@ function codeASMbBTitle_48x2(){
    return `
 
  ;*** The height of the displayed data...
-bmp_48x2_1_window = 50
+bmp_48x2_1_window = ${H}
 
  ;*** The height of the bitmap data. This can be larger than 
  ;*** the displayed data height, if you're scrolling or animating 
  ;*** the data...
-bmp_48x2_1_height = 50
+bmp_48x2_1_height = ${H}
 
    if >. != >[.+(bmp_48x2_1_height)]
       align 256
@@ -1340,3 +1340,91 @@ ${block[5]}
 
 `; 
 };
+
+function simplebBTSKbas() {
+return  `    set romsize 8k
+
+; Since bB puts the display kernel in the last bank, we are putting
+; the game logic there as well in order to free up bank 1 for
+; titlescreen data and code.
+
+    goto GameStart bank2
+
+ asm
+ include "titlescreen/asm/titlescreen.asm"
+end
+
+ bank 2
+
+GameStart
+
+TitleLoop
+    gosub titledrawscreen bank1
+    goto TitleLoop
+`
+}
+
+function titlescreenColor() {
+   return ` ; This is where the titlescreen background color gets set. 
+ ; You can also do a "dim titlescreencolor=[letter]" in bB
+ ; if you want to change the color on the fly.
+
+ ifnconst titlescreencolor
+titlescreencolor
+ endif
+ .byte $${currentBGColor}
+   `;
+}
+
+function titlescreenLayout(which) {
+
+const typesRaw = `draw_96x2_1
+draw_96x2_2
+draw_96x2_3
+draw_48x1_1
+draw_48x1_2
+draw_48x1_3
+draw_48x2_1
+draw_48x2_2
+draw_48x2_3
+draw_player
+draw_gameselect
+draw_space 2
+draw_score`;
+
+const types = typesRaw.split('\n'); //I am so lazy
+//of all the types. comment them out except for the one matching which
+const buf = types.map((thing)=>`${which==thing?'':';'} ${thing}`).join('\n')
+
+   return `
+   ; To use a minikernel, just list it below. They'll be drawn on the screen in
+   ; in the order they were listed.
+   ;
+   ; If a minikernel isn't listed, it won't be compiled into your program, and
+   ; it won't use any rom space.
+  
+   MAC titlescreenlayout
+${buf}
+ ENDM
+  
+   ; minikernel choices are:
+   ; 
+   ; draw_48x1_1, draw_48x1_2, draw_48x1_3 
+   ; 	The first, second, and third 48-wide single-line bitmap minikernels
+   ;
+   ; draw_48x2_1, draw_48x2_2, draw_48x2_3 
+   ; 	The first, second, and third 48-wide double-line bitmap minikernels
+   ;
+   ; draw_96x2_1, draw_96x2_2, draw_96x2_3 
+   ; 	The first, second, and third 96-wide double-line bitmap minikernels
+   ;
+   ; draw_gameselect
+   ; 	The game selection display minikernel
+   ;
+   ; draw_score
+   ;	A minikernel that draws the score
+   ;
+   ; draw_space 10
+   ;	A minikernel used to add blank space between other minikernels
+`;  
+}

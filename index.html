@@ -24,7 +24,7 @@
 
         </div>-->
         <div class="center">
-            <h1>atari-background-builder v0.91</h1>
+            <h1>atari-background-builder v0.95</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
@@ -46,9 +46,9 @@
               
                 <h2>thanks</h2>
                 <ul>
-                    <li>Karl Garrison for making kernels
+                    <li>Karl Garrison for making assorted kernels and general dialog
                     <li><a href="https://www.randomterrain.com/atari-2600-memories-batari-basic-commands.html">Random Terrain</a> for the DPC+ template and general bB wisdom storage.<br>
-
+                    <li>Mike "RevEng" Saarna for the batari Basic Titlescreen kernel
                 </ul>
                 <h2>source</h2>
                 <a href="https://github.com/kirkjerk/atari-background-builder">Fork me at github</a>.
@@ -284,17 +284,7 @@
 
                 <details open >
                     <summary>runnable source code</summary>
-
-
-                    <div>
-                        <button id="buttonDownloadBas" onclick='currentKernelMode.DOWNLOADBAS()'>download abb.bas</button>
-                        <button id="buttonDownloadAsm" onclick='currentKernelMode.DOWNLOADASM()'>download abb.asm</button>
-                        <div id="asmSupportFiles">
-
-                            <button id="buttonDownloadMacro" onclick='downloadMacro()'>download macro.h</button>
-                            <button id="buttonDownloadVCS" onclick='downloadVCS()'>download vcs.h</button>
-                        </div>
-                    </div>            
+                    <div id="downloadButtonWrapper"></div>
                 </details>
             </details>                   
 
@@ -313,9 +303,10 @@
  
             <details>
                 <summary>import image file</summary>
-                (Web formats (JPG, PNG, etc) supported.
-                <br>
-                All files handled locally in browser.)
+                (Web formats (JPG, PNG, etc) supported.<br>
+                All files handled locally in browser. <br>
+                The import is geared at shrinking large images<br>
+                (vs pixel-perfect import of an already scaled image))
                 <div id="imagefileButtonWrapper"></div>
                 <!-- <button onclick="readImage()">convert file</button> -->
                 <label>contrast:

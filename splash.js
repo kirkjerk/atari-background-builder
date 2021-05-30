@@ -58,7 +58,7 @@ function setup() {
   
   populateKernelSelectList();
 
-  const initialKernel = 'player48color';  //  '' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2'
+  const initialKernel = 'player48color';  //  'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2','player48mono'
   document.getElementById('selectKernel').value = initialKernel;
 
   setKernelMode(initialKernel);
@@ -117,6 +117,12 @@ function loadImageFile(file){
 }
 
 
+function getDownloadButtonHTML(key, guts){
+  const caption = guts.caption ? guts.caption : `download ${guts.file}`;
+  return `<button onclick="doModeDownload('${key}')">${caption}</button>`;
+}
+
+
 function setKernelMode(modestring){
   const mode = modes[modestring];
 
@@ -126,7 +132,8 @@ function setKernelMode(modestring){
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT, LINEHEIGHTS,
-        DOWNLOADBAS, DOWNLOADASM, DOWNLOADASMSUPPORT, MULTICOLORBG , DESCRIPTION} = mode;
+        DOWNLOADS,
+        MULTICOLORBG , DESCRIPTION} = mode;
 
 
 
@@ -136,10 +143,16 @@ function setKernelMode(modestring){
   document.getElementById("maxheight").innerHTML = ATARI_MAXHEIGHT;
   
   document.getElementById("info").style.width = `${W*PIXW}px`;
-
-  document.getElementById("buttonDownloadBas").style.display = DOWNLOADBAS ? 'inline-block' : 'none';
-  document.getElementById("buttonDownloadAsm").style.display = DOWNLOADASM ? 'inline-block' : 'none';
-  document.getElementById("asmSupportFiles").style.display = DOWNLOADASMSUPPORT ? 'inline-block' : 'none';
+  
+  const buttonWrapper =  document.getElementById("downloadButtonWrapper");
+  if(DOWNLOADS) {
+    const guts = Object.keys(DOWNLOADS).map((key)=>getDownloadButtonHTML(key,DOWNLOADS[key])).join(" ");
+    console.log(guts);
+    buttonWrapper.innerHTML = guts;
+  } else {
+    buttonWrapper.innerHTML = '';
+  }
+  
   
   document.getElementById("gradiantFGBG").style.display = MULTICOLORBG ? 'inline-block' : 'none';
   if(!MULTICOLORBG) {
@@ -405,12 +418,7 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
-function downloadMacro(){
-  download('macro.h',getMACRO());
-}
-function downloadVCS(){
-  download('vcs.h',getVCS());
-}
+
 
 function makePicker(which){
   
@@ -1001,4 +1009,11 @@ function populateKernelSelectList(){
     sel.add(new Option(name,key));
   });
 
+}
+
+
+
+function doModeDownload(key){
+  const {file,action} = currentKernelMode.DOWNLOADS[key]
+  action(file);
 }
