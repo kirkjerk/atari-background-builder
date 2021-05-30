@@ -4,13 +4,23 @@ function downloadMacro(){
 function downloadVCS(){
   download('vcs.h',getVCS());
 }
-function downloadFile(url) {
-  const a = document.createElement('a')
-  a.href = url
-  a.download = url.split('/').pop()
+function downloadFileNow(url) {
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = url.split('/').pop();
+  console.log('DOWNLOADING',a.download);
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+}
+
+function getMiniNum(){
+  return document.getElementById('mininum').value;
+}
+
+function getMiniNumFilename(file){
+  const num = getMiniNum();
+  return file.replace('?',num);
 }
 
 
@@ -155,15 +165,16 @@ const modes = {
       SCREEN_WIDTH_PER: 10,
       SCREEN_HEIGHT_PER: 10,
       MULTICOLOR: true,
+      MININUM: true,
       DOWNLOADS:{
-        "zip": {file:"titlescreen_kernel_1.8.zip", action:()=>{downloadFile('aux/titlescreen_kernel_1.8.zip')}},
-        "bas": {file:"48x2mini.bas",action:(file)=>{download(file,simplebBTSKbas());}},
-        "asm": {caption:"download titlescreen/text48x2_1_image.asm", file:"48x2_1_image.asm",action:(file)=>{download(file,codeASMbBTitle_48x2());}},
-        "layout":{caption:"download titlescreen/titlescreen_layout.asm", file:"titlescreen_layout.asm",action:(file)=>{download(file,titlescreenLayout('draw_48x2_1'));}},
-        "color":{caption:"download titlescreen/color.asm", file:"titlescreen_color.asm",action:(file)=>{download(file,titlescreenColor());}}
+        "zip": {file:"titlescreen_kernel_1.8.zip", action:()=>{downloadFileNow('./aux/titlescreen_kernel_1.8.zip')}},
+        "bas": {file:"48x2_?_miniexample.bas",action:(file)=>{download(getMiniNumFilename(file),simplebBTSKbas());}},
+        "asm": {caption:"download titlescreen/text48x2_?_image.asm", file:"48x2_?_image.asm",action:(file)=>{download(getMiniNumFilename(file),codeASMbBTitle_48x2());}},
+        "layout":{caption:"download titlescreen/titlescreen_layout.asm", file:"titlescreen_layout.asm",action:(file)=>{download(file,titlescreenLayout(`draw_48x2_${getMiniNum()}`));}},
+        "color":{caption:"download titlescreen/titlescreen_color.asm", file:"titlescreen_color.asm",action:(file)=>{download(file,titlescreenColor());}}
       }, 
       NAME:'bB Titlescreen (mini)Kernel: 48x2',
-      DESCRIPTION: 'Mini-Kernel to be inserted into titlescreen_kernel_1.8/titlescreen',
+      DESCRIPTION: '48 pixel, 2-line color mini-kernel to be inserted in titlescreen zip contents.',
     }
 
     

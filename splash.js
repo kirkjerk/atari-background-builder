@@ -58,7 +58,7 @@ function setup() {
   
   populateKernelSelectList();
 
-  const initialKernel = 'player48color';  //  'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored', 'bBTitle_48x2','player48mono'
+  const initialKernel = 'player48color';  //  'player48color' 'SymPFMirrored','SymPFRepeated','bbPFDPCcolors' 'AssymPFRepeated', 'AssymPFMirrored','player48mono','bBTitle_48x2'
   document.getElementById('selectKernel').value = initialKernel;
 
   setKernelMode(initialKernel);
@@ -132,7 +132,7 @@ function setKernelMode(modestring){
 
   const{ATARI_WIDTH, ATARI_STARTHEIGHT, 
         SCREEN_WIDTH_PER, SCREEN_HEIGHT_PER, ATARI_MAXHEIGHT, LINEHEIGHTS,
-        DOWNLOADS,
+        DOWNLOADS, MININUM,
         MULTICOLORBG , DESCRIPTION} = mode;
 
 
@@ -147,12 +147,13 @@ function setKernelMode(modestring){
   const buttonWrapper =  document.getElementById("downloadButtonWrapper");
   if(DOWNLOADS) {
     const guts = Object.keys(DOWNLOADS).map((key)=>getDownloadButtonHTML(key,DOWNLOADS[key])).join(" ");
-    console.log(guts);
     buttonWrapper.innerHTML = guts;
   } else {
     buttonWrapper.innerHTML = '';
   }
   
+
+  document.getElementById("mininumwrap").style.display = MININUM ? 'block' : 'none';
   
   document.getElementById("gradiantFGBG").style.display = MULTICOLORBG ? 'inline-block' : 'none';
   if(!MULTICOLORBG) {

@@ -1259,81 +1259,83 @@ function codeASMbBTitle_48x2(){
    
    let colorblock = makeColorBytes();
 
+   const mininum = getMiniNum();
+
    return `
 
  ;*** The height of the displayed data...
-bmp_48x2_1_window = ${H}
+bmp_48x2_${mininum}_window = ${H}
 
  ;*** The height of the bitmap data. This can be larger than 
  ;*** the displayed data height, if you're scrolling or animating 
  ;*** the data...
-bmp_48x2_1_height = ${H}
+bmp_48x2_${mininum}_height = ${H}
 
-   if >. != >[.+(bmp_48x2_1_height)]
+   if >. != >[.+(bmp_48x2_${mininum}_height)]
       align 256
    endif
  BYTE 0 ; leave this here!
 
 
  ;*** The color of each line in the bitmap, in reverse order...
-bmp_48x2_1_colors 
+bmp_48x2_${mininum}_colors 
 ${colorblock}
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_00
+bmp_48x2_${mininum}_00
  ; *** replace this block with your bimap_00 data block...
 ${block[0]}
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_01
+bmp_48x2_${mininum}_01
  ; *** replace this block with your bimap_01 data block...
 ${block[1]}
 
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_02
+bmp_48x2_${mininum}_02
  ; *** replace this block with your bimap_02 data block...
 ${block[2]}
 
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_03
+bmp_48x2_${mininum}_03
  ; *** replace this block with your bimap_03 data block...
 ${block[3]}
 
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_04
+bmp_48x2_${mininum}_04
  ; *** replace this block with your bimap_04 data block...
 ${block[4]}
 
 
-   if >. != >[.+bmp_48x2_1_height]
+   if >. != >[.+bmp_48x2_${mininum}_height]
       align 256
    endif
 
 
-bmp_48x2_1_05
+bmp_48x2_${mininum}_05
  ; *** replace this block with your bimap_05 data block...
 ${block[5]}
 
