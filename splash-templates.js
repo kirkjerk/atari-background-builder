@@ -560,6 +560,17 @@ function make48pxblocks(){
 	return block;
 }
 
+function make96pxblocks(){
+	//we have 12 blocks, one for each section...	
+	const block = ['','','','','','','','','','','',''];
+	for(let y = H - 1; y >= 0; y--){
+	   for(let p = 0; p < 12; p++){
+		  block[p] += getByteBuff(yxGrid[y], p*8,8,'	BYTE %','1','0');
+	   }
+	}
+	return block;
+}
+
 // get the bits from start to stop, INCLUSIVE
 //if start is bigger than stop, will be in reverse order
 //if less than 8 will be right padded with 0s
@@ -1254,11 +1265,157 @@ ${PFColors}
 `
 };
 
+function codeASMbBTitle_96x2(){
+	const block = make96pxblocks();
+   let colorblock = makeColorBytes();
+   const mininum = getMiniNum();
+
+   return `
+
+ ;*** The height of the displayed data...
+bmp_96x2_${mininum}_window = ${H}
+
+ ;*** The height of the bitmap data. This can be larger than 
+ ;*** the displayed data height, if you're scrolling or animating 
+ ;*** the data...
+bmp_96x2_${mininum}_height = ${H}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+   BYTE $00 ; leave this here!
+
+
+  ;*** The color of each line in the bitmap, in reverse order...
+bmp_96x2_${mininum}_colors 
+${colorblock}
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_00
+ ; *** replace this block with your bimap_00 data block...
+${block[0]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_01
+ ; *** replace this block with your bimap_01 data block...
+${block[1]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_02
+ ; *** replace this block with your bimap_02 data block...
+${block[2]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_03
+ ; *** replace this block with your bimap_03 data block...
+${block[3]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_04
+ ; *** replace this block with your bimap_04 data block...
+${block[4]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_05
+ ; *** replace this block with your bimap_05 data block...
+${block[5]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_06
+ ; *** replace this block with your bimap_06 data block...
+${block[6]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_07
+ ; *** replace this block with your bimap_07 data block...
+${block[7]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_08
+ ; *** replace this block with your bimap_08 data block...
+${block[8]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_09
+ ; *** replace this block with your bimap_09 data block...
+${block[9]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_${mininum}0
+ ; *** replace this block with your bimap_10 data block...
+${block[10]}
+
+
+   if >. != >[.+(bmp_96x2_${mininum}_height)]
+      align 256
+   endif
+
+
+bmp_96x2_${mininum}_${mininum}1
+ ; *** replace this block with your bimap_11 data block...
+${block[11]}
+
+   `;
+}
+
 function codeASMbBTitle_48x2(){
 	const block = make48pxblocks();
-   
    let colorblock = makeColorBytes();
-
    const mininum = getMiniNum();
 
    return `
@@ -1342,6 +1499,9 @@ ${block[5]}
 
 `; 
 };
+
+
+
 
 function simplebBTSKbas() {
 return  `    set romsize 8k

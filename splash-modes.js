@@ -159,7 +159,7 @@ const modes = {
     },        
 
     bBTitle_48x2: {
-      ATARI_WIDTH: 40,
+      ATARI_WIDTH: 48,
       ATARI_MAXHEIGHT: 85,
       ATARI_STARTHEIGHT:50,
       SCREEN_WIDTH_PER: 10,
@@ -175,6 +175,25 @@ const modes = {
       }, 
       NAME:'bB Titlescreen (mini)Kernel: 48x2',
       DESCRIPTION: '48 pixel, 2-line color mini-kernel to be inserted in titlescreen zip contents.',
+    },
+
+    bBTitle_96x2: {
+      ATARI_WIDTH: 96,
+      ATARI_MAXHEIGHT: 85,
+      ATARI_STARTHEIGHT:50,
+      SCREEN_WIDTH_PER: 7,
+      SCREEN_HEIGHT_PER: 7,
+      MULTICOLOR: true,
+      MININUM: true,
+      DOWNLOADS:{
+        "zip": {file:"titlescreen_kernel_1.8.zip", action:()=>{downloadFileNow('./aux/titlescreen_kernel_1.8.zip')}},
+        "bas": {file:"96x2_?_miniexample.bas",action:(file)=>{download(getMiniNumFilename(file),simplebBTSKbas());}},
+        "asm": {caption:"download titlescreen/text96x2_?_image.asm", file:"96x2_?_image.asm",action:(file)=>{download(getMiniNumFilename(file),codeASMbBTitle_96x2());}},
+        "layout":{caption:"download titlescreen/titlescreen_layout.asm", file:"titlescreen_layout.asm",action:(file)=>{download(file,titlescreenLayout(`draw_96x2_${getMiniNum()}`));}},
+        "color":{caption:"download titlescreen/titlescreen_color.asm", file:"titlescreen_color.asm",action:(file)=>{download(file,titlescreenColor());}}
+      }, 
+      NAME:'bB Titlescreen (mini)Kernel: 96x2',
+      DESCRIPTION: '96 pixel, 2-line color mini-kernel to be inserted in titlescreen zip contents.',
     }
 
     
