@@ -1412,7 +1412,99 @@ ${block[11]}
 
    `;
 }
+function codeASMbBTitle_48x1(){
+	const block = make48pxblocks();
+   const mininum = getMiniNum();
 
+   return `
+ ;*** The height of the displayed data...
+bmp_48x1_${mininum}_window = ${H}
+
+ ;*** The height of the bitmap data. This can be larger than 
+ ;*** the displayed data height, if you're scrolling or animating 
+ ;*** the data...
+bmp_48x1_${mininum}_height = ${H}
+
+ ifnconst bmp_48x1_${mininum}_PF1
+bmp_48x1_${mininum}_PF1
+ endif
+        BYTE %00000000
+ ifnconst bmp_48x1_${mininum}_PF2
+bmp_48x1_${mininum}_PF2
+ endif
+        BYTE %00000000
+ ifnconst bmp_48x1_${mininum}_background
+bmp_48x1_${mininum}_background
+ endif
+        BYTE $c2
+
+ ifnconst bmp_48x1_${mininum}_color
+bmp_48x1_${mininum}_color
+ endif
+ ; *** this is the bitmap color. If you want to change it in a 
+ ; *** variable instead, dim one in bB called "bmp_48x1_${mininum}_color"
+	.byte $${currentFGColor}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+bmp_48x1_${mininum}_00
+ ; *** replace this block with your bimap_00 data block...
+${block[0]}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+
+bmp_48x1_${mininum}_01
+ ; *** replace this block with your bimap_01 data block...
+${block[1]}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+
+bmp_48x1_${mininum}_02
+ ; *** replace this block with your bimap_02 data block...
+ ${block[2]}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+
+bmp_48x1_${mininum}_03
+ ; *** replace this block with your bimap_03 data block...
+ ${block[3]}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+
+bmp_48x1_${mininum}_04
+ ; *** replace this block with your bimap_04 data block...
+ ${block[4]}
+
+
+   if >. != >[.+bmp_48x1_${mininum}_height]
+	align 256
+   endif
+
+
+bmp_48x1_${mininum}_05
+ ; *** replace this block with your bimap_05 data block...
+ ${block[5]}
+   `
+;}
 function codeASMbBTitle_48x2(){
 	const block = make48pxblocks();
    let colorblock = makeColorBytes();

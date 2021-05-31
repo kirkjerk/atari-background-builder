@@ -158,6 +158,25 @@ const modes = {
       LINEHEIGHTS: true
     },        
 
+    bBTitle_48x1: {
+      ATARI_WIDTH: 48,
+      ATARI_MAXHEIGHT: 85,
+      ATARI_STARTHEIGHT:50,
+      SCREEN_WIDTH_PER: 10,
+      SCREEN_HEIGHT_PER: 5,
+      MULTICOLOR: false,
+      MININUM: true,
+      DOWNLOADS:{
+        "zip": {file:"titlescreen_kernel_1.8.zip", action:()=>{downloadFileNow('./aux/titlescreen_kernel_1.8.zip')}},
+        "bas": {file:"48x1_?_miniexample.bas",action:(file)=>{download(getMiniNumFilename(file),simplebBTSKbas());}},
+        "asm": {caption:"download titlescreen/text48x1_?_image.asm", file:"48x1_?_image.asm",action:(file)=>{download(getMiniNumFilename(file),codeASMbBTitle_48x1());}},
+        "layout":{caption:"download titlescreen/titlescreen_layout.asm", file:"titlescreen_layout.asm",action:(file)=>{download(file,titlescreenLayout(`draw_48x1_${getMiniNum()}`));}},
+        "color":{caption:"download titlescreen/titlescreen_color.asm", file:"titlescreen_color.asm",action:(file)=>{download(file,titlescreenColor());}}
+      }, 
+      NAME:'bB Titlescreen (mini)Kernel: 48x1',
+      DESCRIPTION: '48 pixel, 1-line mini-kernel to be inserted in titlescreen zip contents.',
+    },
+
     bBTitle_48x2: {
       ATARI_WIDTH: 48,
       ATARI_MAXHEIGHT: 85,
