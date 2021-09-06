@@ -1,53 +1,59 @@
 <!doctype html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<title>atari-background-builder - large graphic editor for atari 2600 programmers</title>
-<script src="p5.min.js"></script>
-<script src="splash-tools.js"></script>
-<script src="splash-modes.js"></script>
-<script src="splash.js"></script>
-<script src="splash-templates.js"></script>
-<script src="splash-fonts.js"></script>
-<script src="splash-files.js"></script>
-<script src="ataricolors.js"></script>
-<meta name="viewport" content="width=500">
-<link rel="stylesheet" href="style.css">
+    <meta charset="utf-8">
+    <title>atari-background-builder - large graphic editor for atari 2600 programmers</title>
+    <script src="p5.min.js"></script>
+    <script src="splash-tools.js"></script>
+    <script src="splash-modes.js"></script>
+    <script src="splash.js"></script>
+    <script src="splash-templates.js"></script>
+    <script src="splash-fonts.js"></script>
+    <script src="splash-files.js"></script>
+    <script src="ataricolors.js"></script>
+    <meta name="viewport" content="width=500">
+    <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
-    
-    
+
+
     <div id="mainwrapper">
         <!--<div class="left">
 
 
         </div>-->
         <div class="center">
-            <h1>atari-background-builder v0.96</h1>
+            <h1>atari-background-builder v0.97</h1>
             <div id="canvasParent"></div>
 
             <center id="importmsg">IMPORTING IMAGE...</center>
-        
+
             <div id="info">
                 <h2>what is this?</h2>
                 <p>This is a graphical editor for large images that can output code ready to run on an Atari 2600.</p>
 
-                <p>Want a <b>48 pixel splash screen minikernel</b> for your batari Basic or assembly game? We got that. 
-                    Want the properly flipped bits for your <b>assembly Playfield</b>? (Assymmetric, Mirrored, or Repeated?) We got that.
+                <p>Want a <b>48 pixel splash screen minikernel</b> for your batari Basic or assembly game? We got that.
+                    Want the properly flipped bits for your <b>assembly Playfield</b>? (Assymmetric, Mirrored, or
+                    Repeated?) We got that.
                     Want to <b>import an existing image file</b> as a background graphic? We got that!</p>
 
-                <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of 
-                    batari Basic</a> 
-                    may be helpful. We recommend <a href="https://marketplace.visualstudio.com/items?itemName=chunkypixel.atari-dev-studio">Atari Dev Studio</a> for VS Code.)</p>
+                <p>(<a href="https://alienbill.com/2600/bbkickstart/">Some knowledge of
+                        batari Basic</a>
+                    may be helpful. We recommend <a
+                        href="https://marketplace.visualstudio.com/items?itemName=chunkypixel.atari-dev-studio">Atari
+                        Dev Studio</a> for VS Code.)</p>
                 <p>Note that the generated code samples are not going to well-tuned for ROM usage etc, epecially
                     in terms of colors.
                 </p>
-              
+
                 <h2>thanks</h2>
                 <ul>
                     <li>Karl Garrison for making assorted kernels and general dialog
-                    <li><a href="https://www.randomterrain.com/atari-2600-memories-batari-basic-commands.html">Random Terrain</a> for the DPC+ template and general bB wisdom storage.<br>
+                    <li><a href="https://www.randomterrain.com/atari-2600-memories-batari-basic-commands.html">Random
+                            Terrain</a> for the DPC+ template and general bB wisdom storage.<br>
                     <li>Mike "RevEng" Saarna for the batari Basic Titlescreen kernel
                 </ul>
                 <h2>source</h2>
@@ -57,195 +63,209 @@
                 <h2>request</h2>
                 If you find this tool useful, drop me a line at kirkjerk@gmail.com
                 or a shoutout to @kisrael at <a href="https://atariage.com/forums">Atari Age Forums</a>,
-                or ping Kirk Israel on Facebook. 
-    
+                or ping Kirk Israel on Facebook.
+
                 <details>
                     <summary>todo</summary>
-                
+
                     <ul>
                         <li>Big Features (high priority)
-                        <ul>
-                            <li>current bytes as text, not just download File
-                            <li>multiple frames for bB Title Kernel
-                            
-                        </ul>
+                            <ul>
+                                <li>current bytes as text, not just download File
+                                <li>multiple frames for bB Title Kernel
+
+                            </ul>
                         <li>Small Features (maybes)
-                        <ul>
-                            <li>Center canvas on screen?
-                            <li>show estimate of ROM size
-                            <li>save/restore to local storage??
-                            <li>show current color selection in color picker?
-                            <li>more fonts
-                            <li>surface font editor
-                            <li>import from source code
-                            <li>allow color changes indpendent of scanlines per pixel??
-                        </ul>
+                            <ul>
+                                <li>Center canvas on screen?
+                                <li>show estimate of ROM size
+                                <li>save/restore to local storage??
+                                <li>show current color selection in color picker?
+                                <li>more fonts
+                                <li>surface font editor
+                                <li>import from source code
+                                <li>allow color changes indpendent of scanlines per pixel??
+                            </ul>
                         <li>Bugs
-                        <ul>
-                            <li>undo should probably deal with modes etc as well as content
-                            
-                        </ul>            
+                            <ul>
+                                <li>undo should probably deal with modes etc as well as content
+
+                            </ul>
                     </ul>
                     (no promises when I'll get around to things!)
                 </details>
-        
-            </div>        
-        
+
+            </div>
+
         </div>
         <div class="right">
 
-            
-        
-        <div class="tools">
-            <h2>drawing</h2>    
-            <div class="block2x2">
-                <label id="drawtool"><input type="radio" name="tool" onclick="setTool('draw')" id="drawtoolradio" ><span>pen</span></label>
-                <label><input type="radio"  name="tool" onclick="setTool('line')" ><span>line</span></label>
-                <label><input type="radio"  name="tool" onclick="setTool('rect')" ><span>rect</span></label>
-                <label><input type="radio"  id="ellipsetool" name="tool" onclick="setTool('ellipse')" ><span>ellipse</span></label>
-                <label><input type="radio"  name="tool" onclick="setTool('fill')" ><span>fill</span></label>
-            </div>
-                
 
-                <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')" ><span>text</span></label>
+
+            <div class="tools">
+                <h2>drawing</h2>
+                <div class="block2x2">
+                    <label id="drawtool"><input type="radio" name="tool" onclick="setTool('draw')"
+                            id="drawtoolradio"><span>pen</span></label>
+                    <label><input type="radio" name="tool" onclick="setTool('line')"><span>line</span></label>
+                    <label><input type="radio" name="tool" onclick="setTool('rect')"><span>rect</span></label>
+                    <label><input type="radio" id="ellipsetool" name="tool"
+                            onclick="setTool('ellipse')"><span>ellipse</span></label>
+                    <label><input type="radio" name="tool" onclick="setTool('fill')"><span>fill</span></label>
+                </div>
+
+
+                <label><input id="picktext" type="radio" name="tool" onclick="setTool('text')"><span>text</span></label>
                 <div id="sectiontext">
-                    <input id="text" placeholder="Your Text Here" 
-                    onchange='setTextPixels()' onkeyup="setTextPixels()">
+                    <input id="text" placeholder="Your Text Here" onchange='setTextPixels()' onkeyup="setTextPixels()">
                     <br>font: <select onchange="setFont(this.value);">
                         <option>tiny3ishx4</option>
                     </select>
                 </div>
-                <h2>colors</h2>    
+                <h2>colors</h2>
                 <div class="block2x2">
-                    <label id="colortool"><input type="radio"  name="tool" onclick="setTool('color')" ><span>color</span></label>
-                    <label id="gradianttool"><input type="radio"  name="tool" onclick="setTool('gradiant')" ><span>gradient</span></label>    
+                    <label id="colortool"><input type="radio" name="tool"
+                            onclick="setTool('color')"><span>color</span></label>
+                    <label id="gradianttool"><input type="radio" name="tool"
+                            onclick="setTool('gradiant')"><span>gradient</span></label>
                 </div>
-            <div id="sectioncolor">
-                <div class="cols2">
-                    <div>
-                        <div class="fgbg">
-                            <input id="radiofg" onclick="setFGvsBG('fg');" type="radio" name="dofgbg" checked>
-                            <label onclick="openAtariColorPicker('fg')">
-                                <span class='fauxlink'>FG:</span>
-                                <div  style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E</div>
-                            </label>
-                        </div>
-                        <div id="colorPickerHolder_fg"></div>
-                        
-                        
-                        
-                        <div class="fgbg">
-                            <input id="radiobg" onclick="setFGvsBG('bg');" type="radio" name="dofgbg">
-                            <label onclick="openAtariColorPicker('bg')">
-                                <span class='fauxlink'>BG:</span>
-                                <div style="background-color:#000;" class="colorHolder light" id='currentBG'>00</div>
-                            </label>
-                        </div>
-                    
-                        <div id="colorPickerHolder_bg"></div>
-                        
-                        
-                        <div style='text-align:right;'><button onclick="startEyedrop()">eyedropper</button></div>
-                    </div>
-                    <div id="ntscpalzone">
-                        <label><input type="radio" id="tv_ntsc" name="tv" onclick="setTVMode('ntsc')" checked ><span>ntsc</span></label>
-                        <label><input type="radio" id="tv_pal" name="tv" onclick="setTVMode('pal')"  ><span>pal</span></label>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="sectiongradiant">
+                <div id="sectioncolor">
+                    <div class="cols2">
+                        <div>
+                            <div class="fgbg">
+                                <input id="radiofg" onclick="setFGvsBG('fg');" type="radio" name="dofgbg" checked>
+                                <label onclick="openAtariColorPicker('fg')">
+                                    <span class='fauxlink'>FG:</span>
+                                    <div style="background-color:#ECECEC;" class="colorHolder dark" id='currentFG'>0E
+                                    </div>
+                                </label>
+                            </div>
+                            <div id="colorPickerHolder_fg"></div>
 
-                <table class="gradtable">
-                    <tr>
-                        <td colspan="16" onclick="openGradiantAtariColorPicker('start')"><span class='fauxlink'>start</span></td>
-                        <td align="right" colspan="16" onclick="openGradiantAtariColorPicker('stop')"><span class='fauxlink'>end</span></td>
-                    </tr>
-                        
-                    <tr class="gradrow">
-                        <td class="full" onclick="openGradiantAtariColorPicker('start')">
-                            <div style="background-color:#000;" class="colorHolder light" id='currentGradStart'>00</div>
-                        </td>
-                        <td id="grad0"></td>
-                        <td id="grad1"></td>
-                        <td id="grad2"></td>
-                        <td id="grad3"></td>
-                        <td id="grad4"></td>
-                        <td id="grad5"></td>
-                        <td id="grad6"></td>
-                        <td id="grad7"></td>
-                        <td id="grad8"></td>
-                        <td id="grad9"></td>
-                        <td id="grad10"></td>
-                        <td id="grad11"></td>
-                        <td id="grad12"></td>
-                        <td id="grad13"></td>
-                        <td id="grad14"></td>
-                        <td id="grad15"></td>
-                        <td id="grad16"></td>
-                        <td id="grad17"></td>
-                        <td id="grad18"></td>
-                        <td id="grad19"></td>
-                        <td id="grad20"></td>
-                        <td id="grad21"></td>
-                        <td id="grad22"></td>
-                        <td id="grad23"></td>
-                        <td id="grad24"></td>
-                        <td id="grad25"></td>
-                        <td id="grad26"></td>
-                        <td id="grad27"></td>
-                        <td id="grad28"></td>
-                        <td id="grad29"></td>
-                        
-                        <td class="full" onclick="openGradiantAtariColorPicker('stop');">
-                            <div  style="background-color:#ECECEC;" class="colorHolder dark" id='currentGradStop'>0E</div>
-                        </td>
-                    </tr>
-                </table>
+
+
+                            <div class="fgbg">
+                                <input id="radiobg" onclick="setFGvsBG('bg');" type="radio" name="dofgbg">
+                                <label onclick="openAtariColorPicker('bg')">
+                                    <span class='fauxlink'>BG:</span>
+                                    <div style="background-color:#000;" class="colorHolder light" id='currentBG'>00
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div id="colorPickerHolder_bg"></div>
+
+
+                            <div style='text-align:right;'><button onclick="startEyedrop()">eyedropper</button></div>
+                        </div>
+                        <div id="ntscpalzone">
+                            <label><input type="radio" id="tv_ntsc" name="tv" onclick="setTVMode('ntsc')"
+                                    checked><span>ntsc</span></label>
+                            <label><input type="radio" id="tv_pal" name="tv"
+                                    onclick="setTVMode('pal')"><span>pal</span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectiongradiant">
+
+                    <table class="gradtable">
+                        <tr>
+                            <td colspan="16" onclick="openGradiantAtariColorPicker('start')"><span
+                                    class='fauxlink'>start</span></td>
+                            <td align="right" colspan="16" onclick="openGradiantAtariColorPicker('stop')"><span
+                                    class='fauxlink'>end</span></td>
+                        </tr>
+
+                        <tr class="gradrow">
+                            <td class="full" onclick="openGradiantAtariColorPicker('start')">
+                                <div style="background-color:#000;" class="colorHolder light" id='currentGradStart'>00
+                                </div>
+                            </td>
+                            <td id="grad0"></td>
+                            <td id="grad1"></td>
+                            <td id="grad2"></td>
+                            <td id="grad3"></td>
+                            <td id="grad4"></td>
+                            <td id="grad5"></td>
+                            <td id="grad6"></td>
+                            <td id="grad7"></td>
+                            <td id="grad8"></td>
+                            <td id="grad9"></td>
+                            <td id="grad10"></td>
+                            <td id="grad11"></td>
+                            <td id="grad12"></td>
+                            <td id="grad13"></td>
+                            <td id="grad14"></td>
+                            <td id="grad15"></td>
+                            <td id="grad16"></td>
+                            <td id="grad17"></td>
+                            <td id="grad18"></td>
+                            <td id="grad19"></td>
+                            <td id="grad20"></td>
+                            <td id="grad21"></td>
+                            <td id="grad22"></td>
+                            <td id="grad23"></td>
+                            <td id="grad24"></td>
+                            <td id="grad25"></td>
+                            <td id="grad26"></td>
+                            <td id="grad27"></td>
+                            <td id="grad28"></td>
+                            <td id="grad29"></td>
+
+                            <td class="full" onclick="openGradiantAtariColorPicker('stop');">
+                                <div style="background-color:#ECECEC;" class="colorHolder dark" id='currentGradStop'>0E
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                     <div id="gradiantFGBG">
-                        <label><input onclick="setCurrentGradFGBG('fg');" name="gradiantFGBG" type="radio" checked>FG</label>
-                        <label><input onclick="setCurrentGradFGBG('bg');"  name="gradiantFGBG" type="radio">BG</label>
+                        <label><input onclick="setCurrentGradFGBG('fg');" name="gradiantFGBG" type="radio"
+                                checked>FG</label>
+                        <label><input onclick="setCurrentGradFGBG('bg');" name="gradiantFGBG" type="radio">BG</label>
                     </div>
+                </div>
+
+                <div id="colorPickerHolder_gradfgstart"></div>
+                <div id="colorPickerHolder_gradfgstop"></div>
+                <div id="colorPickerHolder_gradbgstart"></div>
+                <div id="colorPickerHolder_gradbgstop"></div>
+
+                <h2>edit</h2>
+
+                <label><input type="radio" name="tool" onclick="setTool('select')"><span>select</span></label>
+                <div id="sectionselect">
+                    <button onclick="doCopy();">copy</button><button onclick="doCut();">cut</button>
+                </div>
+                <label><input id="toolpaste" type="radio" name="tool"
+                        onclick="setTool('paste')"><span>paste</span></label>
+
+
+
             </div>
+            <button onclick="popUndo();">undo</button>
 
-            <div id="colorPickerHolder_gradfgstart"></div>
-            <div id="colorPickerHolder_gradfgstop"></div>
-            <div id="colorPickerHolder_gradbgstart"></div>
-            <div id="colorPickerHolder_gradbgstop"></div>
-            
-            <h2>edit</h2>    
+            <h2>inkmode</h2>
+            <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked><span>toggle</span></label>
+            <br />
+            <label><input type="radio" name="ink" onclick="setInkmode('leftright')"><span>left draw / right
+                    erase</span></label>
+            <br />
+            <label><input type="radio" name="ink" onclick="setInkmode('draw')"><span>draw</span></label>
+            <br />
+            <label><input type="radio" name="ink" onclick="setInkmode('erase')"><span>erase</span></label>
 
-            <label><input type="radio" name="tool" onclick="setTool('select')"><span>select</span></label>
-            <div id="sectionselect"> 
-                <button onclick="doCopy();">copy</button><button onclick="doCut();">cut</button>
-            </div>
-            <label><input id="toolpaste" type="radio" name="tool" onclick="setTool('paste')"><span>paste</span></label>
-
-
-                
-        </div>
-        <button onclick="popUndo();">undo</button>
-
-        <h2>inkmode</h2>
-            <label><input type="radio" name="ink" onclick="setInkmode('toggle')" checked ><span>toggle</span></label>
-            <br/>
-            <label><input type="radio" name="ink" onclick="setInkmode('leftright')"  ><span>left draw / right erase</span></label>
-            <br/>
-            <label><input type="radio" name="ink" onclick="setInkmode('draw')"  ><span>draw</span></label>
-            <br/>
-            <label><input type="radio" name="ink" onclick="setInkmode('erase')"  ><span>erase</span></label> 
-            
-                <!--
+            <!--
                 <select onchange='setInkmode(this.value);'>
                     <option >toggle</option>
                     <option >draw</option>
                     <option >erase</option>
                 </select>-->
-                
-                
-                <details open>
-                    <summary>kernel type</summary>
-        
+
+
+            <details open>
+                <summary>kernel type</summary>
+
                 <select id="selectKernel" onchange='setKernelMode(this.value);'></select>
 
                 <select id="scanlinecount" onchange="setScanlinesPer(this.value)">
@@ -274,16 +294,16 @@
                 <div>
                     height: <input id="height">
                     <span id="showmullinesper"></span>
-                    / <span id="maxheight"></span> 
+                    / <span id="maxheight"></span>
                     <button onclick="setNewHeight()">update</button>
                 </div>
 
-                <details open >
-                <summary>kernel description</summary>
-                <div id="kerneldesc"></div>
+                <details open>
+                    <summary>kernel description</summary>
+                    <div id="kerneldesc"></div>
                 </details>
 
-                <details open >
+                <details open>
                     <summary>runnable source code</summary>
                     <div id="mininumwrap">
                         <label>minikernel number:
@@ -294,16 +314,16 @@
                             </select>
                         </label>
                     </div>
-    
+
                     <div id="downloadButtonWrapper"></div>
                 </details>
-            </details>                   
+            </details>
 
             <details>
                 <summary>project save/load</summary>
                 <div class="marginBelow">
                     save project:<br>
-                    <button onclick="saveProject();">Save File</button> 
+                    <button onclick="saveProject();">Save File</button>
                 </div>
                 <div class="marginBelow">
                     load project:
@@ -311,7 +331,7 @@
                 </div>
             </details>
 
- 
+
             <details>
                 <summary>import image file</summary>
                 (Web formats (JPG, PNG, etc) supported.<br>
@@ -321,8 +341,8 @@
                 <div id="imagefileButtonWrapper"></div>
                 <!-- <button onclick="readImage()">convert file</button> -->
                 <label>contrast:
-                <input type="range" id="contrast" 
-                min="0" max="255" value="128" onchange="handleContrast();"></label>
+                    <input type="range" id="contrast" min="0" max="255" value="128"
+                        onchange="handleContrast();"></label>
                 <label><input type="checkbox" id="invert" onchange="handleInvert();">invert</label>
             </details>
 
@@ -330,11 +350,10 @@
 
 
         </div>
-    </div>    
-    
+    </div>
 
 
 
-  
+
+
 </html>
-

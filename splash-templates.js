@@ -1,6 +1,6 @@
 
-function code48pxBBWrap(){
-return `   set romsize 4k
+function code48pxBBWrap() {
+   return `   set romsize 4k
    const logo_color=$${currentFGColor}
    const logo_height=${H}
    COLUBK=$${currentBGColor}      
@@ -37,9 +37,9 @@ SubMainLoop
 
 
 
-function code48pxMonoASM(){
+function code48pxMonoASM() {
    const block = make48pxblocks();
-    return `
+   return `
 LogoFrame
 ; Enable VBLANK
 	lda #2
@@ -208,9 +208,9 @@ ${block[5]}
 
 
 
-function code48pxColorASM(){
-	const block = make48pxblocks();
-   
+function code48pxColorASM() {
+   const block = make48pxblocks();
+
    let colorblock = makeColorBytes();
 
    return `LogoFrame
@@ -385,11 +385,11 @@ ${block[5]}
 logo_colors
 ${colorblock}
     
-`;   
+`;
 }
 function codeBBpfColors() {
    const pixelblock = getBBPixelBlock();
-   const colorblock = getBBColorBlock(colorGrid ,'0E');
+   const colorblock = getBBColorBlock(colorGrid, '0E');
 
    return `    set kernel_options pfcolors 
 startLoop
@@ -408,7 +408,7 @@ ${colorblock}end
 }
 
 
-function codeBBpfDPC(){
+function codeBBpfDPC(fracincPixels, fracincColors, comment) {
    const pixelblock = getBBPixelBlock();
    const colorblock = getBBColorBlock(colorGrid, '0E');
    const bkcolor = getBBColorBlock(colorBgGrid, '00');
@@ -458,15 +458,15 @@ __Main_Loop
 
    ;***************************************************************
    ;
-   ;  88 rows that are 2 scanlines high.
+   ;  ${comment}
    ;
-   DF6FRACINC = 255 ; Background colors.
-   DF4FRACINC = 255 ; Playfield colors.
+   DF6FRACINC = ${fracincColors} ; Background colors.
+   DF4FRACINC = ${fracincColors} ; Playfield colors.
 
-   DF0FRACINC = 128 ; Column 0.
-   DF1FRACINC = 128 ; Column 1.
-   DF2FRACINC = 128 ; Column 2.
-   DF3FRACINC = 128 ; Column 3.
+   DF0FRACINC = ${fracincPixels} ; Column 0.
+   DF1FRACINC = ${fracincPixels} ; Column 1.
+   DF2FRACINC = ${fracincPixels} ; Column 2.
+   DF3FRACINC = ${fracincPixels} ; Column 3.
 
    drawscreen
 
@@ -503,28 +503,28 @@ __Main_Loop
 
 function getBBPixelBlock() {
    let pixelblock = '';
-   for(let y = 0; y < H; y++){
-      for(let x = 0; x < W; x++){
-         pixelblock += yxGrid[y][x]?'X':'.';
+   for (let y = 0; y < H; y++) {
+      for (let x = 0; x < W; x++) {
+         pixelblock += yxGrid[y][x] ? 'X' : '.';
       }
       pixelblock += '\n';
    }
    return pixelblock;
 }
-function getBBColorBlock(grid, colorIfNull){
+function getBBColorBlock(grid, colorIfNull) {
    let colorblock = '';
 
-   for(let y = 0; y < H; y++){
+   for (let y = 0; y < H; y++) {
       const colorbyte = grid[y] ? grid[y] : colorIfNull;
       colorblock += `   $${colorbyte}\n`
-   } 
+   }
    return colorblock;
 }
 
 
-function makeColorBytes(){ //reverse order
+function makeColorBytes() { //reverse order
    let colorblock = '';
-   for(let y = H-1; y >= 0; y--){
+   for (let y = H - 1; y >= 0; y--) {
       const colorbyte = colorGrid[y] ? colorGrid[y] : '0E';
       colorblock += `   .byte $${colorbyte}\n`
    }
@@ -532,65 +532,65 @@ function makeColorBytes(){ //reverse order
 }
 
 
-function getByteBuff(line, start,length,prefix,on,off){
+function getByteBuff(line, start, length, prefix, on, off) {
    let buf = prefix;
    const increment = length / abs(length); //i.e. 1 or -1
 
 
    let x = start;
-   for(let c = 0; c < abs(length); c++) {
-      buf += line[x] ? on:off;
+   for (let c = 0; c < abs(length); c++) {
+      buf += line[x] ? on : off;
       x += increment;
    }
-   if(abs(length) < 8) { //pad with zeros
+   if (abs(length) < 8) { //pad with zeros
       buf += '0'.repeat(8 - abs(length));
    }
    buf += '\n';
-   return buf;   
+   return buf;
 }
 
-function make48pxblocks(){
-	//we have 6 blocks, one for each section...	
-	const block = ['','','','','',''];
-	for(let y = H - 1; y >= 0; y--){
-	   for(let p = 0; p < 6; p++){
-		  block[p] += getByteBuff(yxGrid[y], p*8,8,'	BYTE %','1','0');
-	   }
-	}
-	return block;
+function make48pxblocks() {
+   //we have 6 blocks, one for each section...	
+   const block = ['', '', '', '', '', ''];
+   for (let y = H - 1; y >= 0; y--) {
+      for (let p = 0; p < 6; p++) {
+         block[p] += getByteBuff(yxGrid[y], p * 8, 8, '	BYTE %', '1', '0');
+      }
+   }
+   return block;
 }
 
-function make96pxblocks(){
-	//we have 12 blocks, one for each section...	
-	const block = ['','','','','','','','','','','',''];
-	for(let y = H - 1; y >= 0; y--){
-	   for(let p = 0; p < 12; p++){
-		  block[p] += getByteBuff(yxGrid[y], p*8,8,'	BYTE %','1','0');
-	   }
-	}
-	return block;
+function make96pxblocks() {
+   //we have 12 blocks, one for each section...	
+   const block = ['', '', '', '', '', '', '', '', '', '', '', ''];
+   for (let y = H - 1; y >= 0; y--) {
+      for (let p = 0; p < 12; p++) {
+         block[p] += getByteBuff(yxGrid[y], p * 8, 8, '	BYTE %', '1', '0');
+      }
+   }
+   return block;
 }
 
 // get the bits from start to stop, INCLUSIVE
 //if start is bigger than stop, will be in reverse order
 //if less than 8 will be right padded with 0s
-function makeColumnBlock(start, stop){
+function makeColumnBlock(start, stop) {
    const length = (stop - start) - ((start > stop) ? 1 : -1);
    let buf = '';
-   for(let y = H - 1; y >= 0; y--){
-      buf += getByteBuff(yxGrid[y], start,length,'	.byte %','1','0');
+   for (let y = H - 1; y >= 0; y--) {
+      buf += getByteBuff(yxGrid[y], start, length, '	.byte %', '1', '0');
    }
    return buf;
 }
 
-function codeASMpfAssymRepeated(playfield_line_height){
+function codeASMpfAssymRepeated(playfield_line_height) {
    const PFColors = makeColorBytes();
-   const PF0DataA = makeColumnBlock(3,0);
-   const PF1DataA = makeColumnBlock(4,11);
-   const PF2DataA = makeColumnBlock(19,12);
-   const PF0DataB = makeColumnBlock(23,20);
-   const PF1DataB = makeColumnBlock(24,31);
-   const PF2DataB = makeColumnBlock(39,32);
+   const PF0DataA = makeColumnBlock(3, 0);
+   const PF1DataA = makeColumnBlock(4, 11);
+   const PF2DataA = makeColumnBlock(19, 12);
+   const PF0DataB = makeColumnBlock(23, 20);
+   const PF1DataB = makeColumnBlock(24, 31);
+   const PF2DataB = makeColumnBlock(39, 32);
 
    return `    processor 6502
     include "vcs.h"
@@ -776,14 +776,14 @@ ${PFColors}
 
 
 
-function codeASMpfAssymMirrored(playfield_line_height){
+function codeASMpfAssymMirrored(playfield_line_height) {
    const PFColors = makeColorBytes();
-   const PF0DataA = makeColumnBlock(3,0);
-   const PF1DataA = makeColumnBlock(4,11);
-   const PF2DataA = makeColumnBlock(19,12);
-   const PF0DataB = makeColumnBlock(36,39);
-   const PF1DataB = makeColumnBlock(35,28);
-   const PF2DataB = makeColumnBlock(20,27);
+   const PF0DataA = makeColumnBlock(3, 0);
+   const PF1DataA = makeColumnBlock(4, 11);
+   const PF2DataA = makeColumnBlock(19, 12);
+   const PF0DataB = makeColumnBlock(36, 39);
+   const PF1DataB = makeColumnBlock(35, 28);
+   const PF2DataB = makeColumnBlock(20, 27);
 
    return `
    processor 6502
@@ -963,11 +963,11 @@ ${PFColors}
    `;
 }
 
-function codeASMpfSymMirrored(playfield_line_height){
+function codeASMpfSymMirrored(playfield_line_height) {
    const PFColors = makeColorBytes();
-   const PF0DataA = makeColumnBlock(3,0);
-   const PF1DataA = makeColumnBlock(4,11);
-   const PF2DataA = makeColumnBlock(19,12);
+   const PF0DataA = makeColumnBlock(3, 0);
+   const PF1DataA = makeColumnBlock(4, 11);
+   const PF2DataA = makeColumnBlock(19, 12);
 
    return `    processor 6502
     include "vcs.h"
@@ -1114,11 +1114,11 @@ ${PFColors}
 }
 
 
-function codeASMpfSymRepeated(playfield_line_height){
+function codeASMpfSymRepeated(playfield_line_height) {
    const PFColors = makeColorBytes();
-   const PF0DataA = makeColumnBlock(3,0);
-   const PF1DataA = makeColumnBlock(4,11);
-   const PF2DataA = makeColumnBlock(19,12);
+   const PF0DataA = makeColumnBlock(3, 0);
+   const PF1DataA = makeColumnBlock(4, 11);
+   const PF2DataA = makeColumnBlock(19, 12);
 
    return `    processor 6502
     include "vcs.h"
@@ -1265,8 +1265,8 @@ ${PFColors}
 `
 };
 
-function codeASMbBTitle_96x2(){
-	const block = make96pxblocks();
+function codeASMbBTitle_96x2() {
+   const block = make96pxblocks();
    let colorblock = makeColorBytes();
    const mininum = getMiniNum();
 
@@ -1412,8 +1412,8 @@ ${block[11]}
 
    `;
 }
-function codeASMbBTitle_48x1(){
-	const block = make48pxblocks();
+function codeASMbBTitle_48x1() {
+   const block = make48pxblocks();
    const mininum = getMiniNum();
 
    return `
@@ -1504,9 +1504,10 @@ bmp_48x1_${mininum}_05
  ; *** replace this block with your bimap_05 data block...
  ${block[5]}
    `
-;}
-function codeASMbBTitle_48x2(){
-	const block = make48pxblocks();
+      ;
+}
+function codeASMbBTitle_48x2() {
+   const block = make48pxblocks();
    let colorblock = makeColorBytes();
    const mininum = getMiniNum();
 
@@ -1589,14 +1590,14 @@ bmp_48x2_${mininum}_05
 ${block[5]}
 
 
-`; 
+`;
 };
 
 
 
 
 function simplebBTSKbas() {
-return  `    set romsize 8k
+   return `    set romsize 8k
 
 ; Since bB puts the display kernel in the last bank, we are putting
 ; the game logic there as well in order to free up bank 1 for
@@ -1632,7 +1633,7 @@ titlescreencolor
 
 function titlescreenLayout(which) {
 
-const typesRaw = `draw_96x2_1
+   const typesRaw = `draw_96x2_1
 draw_96x2_2
 draw_96x2_3
 draw_48x1_1
@@ -1646,9 +1647,9 @@ draw_gameselect
 draw_space 2
 draw_score`;
 
-const types = typesRaw.split('\n'); //I am so lazy
-//of all the types. comment them out except for the one matching which
-const buf = types.map((thing)=>`${which==thing?'':';'} ${thing}`).join('\n')
+   const types = typesRaw.split('\n'); //I am so lazy
+   //of all the types. comment them out except for the one matching which
+   const buf = types.map((thing) => `${which == thing ? '' : ';'} ${thing}`).join('\n')
 
    return `
    ; To use a minikernel, just list it below. They'll be drawn on the screen in
@@ -1680,5 +1681,5 @@ ${buf}
    ;
    ; draw_space 10
    ;	A minikernel used to add blank space between other minikernels
-`;  
+`;
 }
