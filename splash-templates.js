@@ -41,18 +41,7 @@ function code48pxMonoASM() {
    const block = make48pxblocks();
    return `
 LogoFrame
-; Enable VBLANK
-	lda #2
-    sta VBLANK
-	sta VSYNC
-	lda #26
-	sta TIM8T
-LogoWaitVSync
-	lda INTIM
-	bne LogoWaitVSync
-	sta WSYNC                   ; 3     (0)
-	sta VSYNC                   ; 3     (3)
-
+    VERTICAL_SYNC
 ; 37 lines of VBLANK
 	lda #44                     ; 2     (5)
 	sta TIM64T                  ; 3     (8)
@@ -88,8 +77,7 @@ LogoWaitVBlank
 	lda #0
         sta VBLANK
 
-; waste 51 scanlines
-;	ldx #51
+; Padding before logo
     ldx #(96 - (logo_height/2))
 LogoVisibleScreen
     sta WSYNC
@@ -98,11 +86,15 @@ LogoVisibleScreen
 
 
 
-    ; Blank Screen and Set Playfield
-
-    ldy #logo_height
-    dey
+   ldy #logo_height
+   dey
     
+   jmp LogoLoop
+
+   if >. != >[.+(logo_kernel_size)]
+      align 256
+   endif
+
 LogoLoop
     sta WSYNC                       ; 3     (0)
     sty temp1                       ; 3     (3)
@@ -124,13 +116,12 @@ LogoLoop
     ldy temp1                       ; 3     (57)
     dey                             ; 2     (59)
     bpl LogoLoop                    ; 3     (62)
+logo_kernel_size = * - LogoLoop
     
     ldy #0
     sty GRP0
     sty GRP1
     sty GRP0
-    sty GRP1
-;	ldx #40
     ldx #((96 - (logo_height/2))-1)
 LogoGap
     sta WSYNC
@@ -214,18 +205,8 @@ function code48pxColorASM() {
    let colorblock = makeColorBytes();
 
    return `LogoFrame
-; Enable VBLANK
-	lda #2
-    sta VBLANK
-	sta VSYNC
-	lda #26
-	sta TIM8T
-LogoWaitVSync
-	lda INTIM
-	bne LogoWaitVSync
-	sta WSYNC                   ; 3     (0)
-	sta VSYNC                   ; 3     (3)
-
+    VERTICAL_SYNC
+    
 ; 37 lines of VBLANK
 	lda #44                     ; 2     (5)
 	sta TIM64T                  ; 3     (8)
@@ -277,6 +258,13 @@ LogoVisibleScreen
     lda logo_colors,y
     sta COLUP0
     sta COLUP1
+
+   jmp LogoLoop
+
+   if >. != >[.+(logo_kernel_size)]
+      align 256
+   endif
+
     
 LogoLoop
     sta WSYNC                       ; 3     (0)
@@ -302,6 +290,7 @@ LogoLoop
     sta COLUP1                      ; 3     (67)
     dey                             ; 2     (69)
     bpl LogoLoop                    ; 3     (72)
+logo_kernel_size = * - LogoLoop
     
     ldy #0
     sty GRP0
@@ -438,10 +427,10 @@ __Start_Restart
 
 
    playfield:
-   ${pixelblock}end 
+${pixelblock}end 
    
      pfcolors:
-   ${colorblock}end
+${colorblock}end
 
    ;***************************************************************
    ;
