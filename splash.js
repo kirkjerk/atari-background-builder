@@ -123,7 +123,7 @@ function getDownloadButtonHTML(key, guts){
 }
 
 
-function setKernelMode(modestring){
+function setKernelMode(modestring, preserveHeight){
   const mode = modes[modestring];
 
   currentKernelMode = mode;
@@ -178,7 +178,10 @@ function setKernelMode(modestring){
   setScanlinesPer(currentScanlinesPer);
   
   W = ATARI_WIDTH;
-  H = ATARI_STARTHEIGHT;
+  
+  if(!preserveHeight){
+    H = ATARI_STARTHEIGHT;
+  }
   PIXW = SCREEN_WIDTH_PER;
   PIXH = SCREEN_HEIGHT_PER * currentScanlinesPer;
 
@@ -399,6 +402,7 @@ function setNewHeight(){
   for (; y < newHeight; y++) {
     yxGrid[y] = Array();
   }
+  
   H = newHeight;
   resizeCanvas(W * PIXW, H * PIXH);
 
@@ -914,9 +918,11 @@ function loadProjectFile(file){
   currentFGColor = project.FGColor;
   currentBGColor = project.BGColor;
   currentScanlinesPer = project.currentScanlinesPer;
-  
-  setKernelMode(project.mode);
 
+  const heightElem = document.getElementById('height');
+  heightElem.value = H;
+
+  setKernelMode(project.mode, true);
   showUIFromCurrent();
   loop();
 }
@@ -984,6 +990,7 @@ function duplicateYXGridHalves() {
 function setScanlinesPer(lines){
   currentScanlinesPer = lines;
 
+  
   if(H * currentScanlinesPer > currentKernelMode.ATARI_MAXHEIGHT){
     H = floor(currentKernelMode.ATARI_MAXHEIGHT / currentScanlinesPer);
     document.getElementById('height').value = H;   
