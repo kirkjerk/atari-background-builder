@@ -206,6 +206,15 @@ function fillBlankColorGridWithDefault(){
   }
 }
 
+function invertGrid(){
+  for(let gridY = 0; gridY < H; gridY++){
+    for(let gridX = 0; gridX < W; gridX++){
+      yxGrid[gridY][gridX] = !yxGrid[gridY][gridX];
+    }
+  }
+  loop();
+}
+
 function getColorForRow(y,half){
   const alpha = half?'87':'';
   if(! currentKernelMode.MULTICOLOR){
